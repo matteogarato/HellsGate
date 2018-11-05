@@ -1,0 +1,23 @@
+﻿using HellsGate.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace HellsGate.Lib
+{
+    public class AutorizationManager
+    {
+        /// <summary>
+        /// determine if the authorization of the car match the needed Authorization
+        /// </summary>
+        /// <param name="p_CarModel">car anagraphic</param>
+        /// <param name="p_AuthNeeded">needed Authorization</param>
+        /// <returns></returns>
+        public bool IsAutorized(CarAnagraphicModel p_CarModel, AuthType p_AuthNeeded)
+        {
+            return p_CarModel.AutorizationLevel.AuthValue == p_AuthNeeded;
+
+        }
+    }
+}
