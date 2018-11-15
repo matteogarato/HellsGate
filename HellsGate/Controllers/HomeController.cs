@@ -39,5 +39,26 @@ namespace HellsGate.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public AuthType AccessType = AuthType.User;//TODO: add configuration reading
+        [HttpGet]
+        public IActionResult VerifyPlate()
+        {
+            using (var context = new Context())
+            {
+                string plate = Request.Form["PLTNMB"];
+                if (context.Cars.Any(a => a.LicencePlate == plate))
+                {
+                    Lib.AutorizationManager.IsAutorized(context.Cars.First(a => a.LicencePlate == plate), AccessType);
+                }
+                else
+                {
+                    //TODO: add plate after confirm
+                }
+                //TODO:send message to notify
+
+            }
+            return View();
+        }
+
     }
 }

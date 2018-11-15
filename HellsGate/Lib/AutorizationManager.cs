@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
-    public class AutorizationManager
+    public static class AutorizationManager
     {
         /// <summary>
         /// determine if the authorization of the car match the needed Authorization
@@ -14,10 +14,9 @@ namespace HellsGate.Lib
         /// <param name="p_CarModel">car anagraphic</param>
         /// <param name="p_AuthNeeded">needed Authorization</param>
         /// <returns></returns>
-        public bool IsAutorized(CarAnagraphicModel p_CarModel, AuthType p_AuthNeeded)
+        public static bool IsAutorized(CarAnagraphicModel p_CarModel, AuthType p_AuthNeeded)
         {
             return p_CarModel.AutorizationLevel.AuthValue == p_AuthNeeded;
-
         }
     }
 }
