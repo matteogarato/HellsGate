@@ -40,6 +40,7 @@ namespace HellsGate.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         public AuthType AccessType = AuthType.User;//TODO: add configuration reading
+
         [HttpGet]
         public IActionResult VerifyPlate()
         {
