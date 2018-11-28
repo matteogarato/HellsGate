@@ -9,6 +9,7 @@ namespace HellsGate.Models
     {
         public int CarAnagraphicModelId { get; set; }
         public string LicencePlate { get; set; }
+        public DateTime LastModify { get; set; }
         public PeopleAnagraphicModel Owner { get; set; }
         public AutorizationLevelModel AutorizationLevel { get; set; }
 
