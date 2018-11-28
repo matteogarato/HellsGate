@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HellsGate.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,26 +13,35 @@ namespace HellsGate.Lib
         private SmtpClient client = new SmtpClient();
         private MailMessage mailMessage = new MailMessage();
 
-        public MailSenderManager()
+        readonly Startup startup;
+
+        public MailSenderManager(Startup p_startup)
         {
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("username", "password");
+            startup = p_startup;
+            client = new SmtpClient
+            {
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("username", "password")
+            };
+            startup.SendMailEvent += SendMessage;
         }
-        public bool SendMessage()
+
+        private void SendMessage(object sender, MailEventArgs p_mailEvent)
         {
             try
             {
-                mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress("whoever@me.com");
+                mailMessage = new MailMessage
+                {
+                    From = new MailAddress("whoever@me.com")
+                };
                 mailMessage.To.Add("receiver@me.com");
-                mailMessage.Body = "body";
-                mailMessage.Subject = "subject";
+                mailMessage.Body = p_mailEvent.Message;
+                mailMessage.Subject = p_mailEvent.Subject;
                 client.Send(mailMessage);
-                return true;
             }
             catch (Exception ex)
             {
-                return false;
+
             }
         }
     }

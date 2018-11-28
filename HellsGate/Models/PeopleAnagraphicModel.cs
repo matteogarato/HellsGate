@@ -11,6 +11,7 @@ namespace HellsGate.Models
         public int PeopleAnagraphicModelId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        public DateTime LastModify { get; set; }
         public AutorizationLevelModel Auth { get; set; }
     }
 }
