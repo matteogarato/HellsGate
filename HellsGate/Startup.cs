@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HellsGate.Models;
 using System;
+using System.Diagnostics;
 
 namespace HellsGate
 {
@@ -17,6 +18,7 @@ namespace HellsGate
     {
         public EventHandler<MailEventArgs> SendMailEvent;
         public EventHandler<LogEventArgs> LogEvent;
+        private LogEventArgs _logEvent;
         public Locator Locator { get; set; }
         public Startup(IConfiguration configuration)
         {
@@ -63,12 +65,13 @@ namespace HellsGate
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            Locator = new Locator();
+            Locator = new Locator(this);
         }
 
-        public void Log(LogEventArgs p_logEventArgs)
+        public void Log(TraceLevel p_Trace, string p_Message, MethodBase p_Method, Exception p_Ex = null)
         {
-            LogEvent?.Invoke(null, p_logEventArgs);
+            _logEvent = new LogEventArgs(p_Trace, p_Message, p_Method, p_Ex);
+            LogEvent?.Invoke(null, _logEvent);
         }
 
         public void SendMail(MailEventArgs p_mailEventArgs)
