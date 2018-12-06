@@ -5,11 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HellsGate.Models;
+using HellsGate.Lib;
 
 namespace HellsGate.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly Startup _startup;
+
+        public HomeController(Startup p_Startup)
+        {
+            _startup = p_Startup;
+        }
         public IActionResult Index()
         {
             return View();
@@ -55,8 +62,7 @@ namespace HellsGate.Controllers
                 {
                     //TODO: add plate after confirm
                 }
-                //TODO:send message to notify
-
+                _startup.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
             }
             return View();
         }

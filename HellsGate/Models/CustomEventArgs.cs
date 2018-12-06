@@ -8,7 +8,13 @@ namespace HellsGate.Models
     {
         public string Subject { get; set; }
         public string Message { get; set; }
-        public DateTime TimeofEvent { get; set; }
+        public DateTime TimeOfEvent { get; set; }
+        public MailEventArgs(string p_Subject, string p_Message, DateTime p_TimeOfEvent)
+        {
+            Subject = p_Subject;
+            Message = p_Message;
+            TimeOfEvent = p_TimeOfEvent;
+        }
     }
 
     public class LogEventArgs : EventArgs
