@@ -9,6 +9,8 @@ namespace HellsGate.Models
     {
         public int AccessModelId { get; set; }
         public DateTime AccessTime { get; set; }
+        public bool GrantedAccess { get; set; }
+        public string Plate { get; set; }
         public CarAnagraphicModel CarEntered { get; set; }
     }
 }

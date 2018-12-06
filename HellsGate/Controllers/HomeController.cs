@@ -54,14 +54,22 @@ namespace HellsGate.Controllers
             using (var context = new Context())
             {
                 string plate = Request.Form["PLTNMB"];
+                AccessModel newAccess = new AccessModel
+                {
+                    AccessTime = DateTime.Now,
+                    Plate = plate
+                };
                 if (context.Cars.Any(a => a.LicencePlate == plate))
                 {
-                    Lib.AutorizationManager.IsAutorized(context.Cars.First(a => a.LicencePlate == plate), AccessType);
+                    newAccess.CarEntered = context.Cars.First(a => a.LicencePlate == plate);
+                    newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.CarEntered, AccessType);
                 }
                 else
                 {
                     //TODO: add plate after confirm
                 }
+                context.Access.Add(newAccess);
+                context.SaveChanges();
                 _startup.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
             }
             return View();
