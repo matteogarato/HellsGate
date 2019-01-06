@@ -8,17 +8,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using HellsGate.Models;
-using System;
-using System.Diagnostics;
+
 
 namespace HellsGate
 {
     public class Startup
     {
-        public EventHandler<MailEventArgs> SendMailEvent;
-        public EventHandler<LogEventArgs> LogEvent;
-        private LogEventArgs _logEvent;
+
         public Locator Locator { get; set; }
         public Startup(IConfiguration configuration)
         {
@@ -68,15 +64,6 @@ namespace HellsGate
             Locator = new Locator(this);
         }
 
-        public void Log(TraceLevel p_Trace, string p_Message, MethodBase p_Method, Exception p_Ex = null)
-        {
-            _logEvent = new LogEventArgs(p_Trace, p_Message, p_Method, p_Ex);
-            LogEvent?.Invoke(null, _logEvent);
-        }
 
-        public void SendMail(MailEventArgs p_mailEventArgs)
-        {
-            SendMailEvent?.Invoke(null, p_mailEventArgs);
-        }
     }
 }

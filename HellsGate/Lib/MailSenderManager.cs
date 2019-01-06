@@ -14,17 +14,15 @@ namespace HellsGate.Lib
         private SmtpClient client = new SmtpClient();
         private MailMessage mailMessage = new MailMessage();
 
-        readonly Startup startup;
 
         public MailSenderManager(Startup p_startup)
         {
-            startup = p_startup;
             client = new SmtpClient
             {
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential("username", "password")
             };
-            startup.SendMailEvent += SendMessage;
+            StaticEventHandler.SendMailEvent += SendMessage;
         }
 
         private void SendMessage(object sender, MailEventArgs p_mailEvent)
@@ -42,7 +40,7 @@ namespace HellsGate.Lib
             }
             catch (Exception ex)
             {
-                startup.Log(System.Diagnostics.TraceLevel.Error, "Error Sending mail", MethodBase.GetCurrentMethod(), ex);
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "Error Sending mail", MethodBase.GetCurrentMethod(), ex);
             }
         }
     }

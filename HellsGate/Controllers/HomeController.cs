@@ -11,12 +11,7 @@ namespace HellsGate.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Startup _startup;
 
-        public HomeController(Startup p_Startup)
-        {
-            _startup = p_Startup;
-        }
         public IActionResult Index()
         {
             return View();
@@ -70,7 +65,7 @@ namespace HellsGate.Controllers
                 }
                 context.Access.Add(newAccess);
                 context.SaveChanges();
-                _startup.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
+                StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
             }
             return View();
         }

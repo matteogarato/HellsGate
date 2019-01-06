@@ -4,12 +4,10 @@ namespace HellsGate.Lib
 {
     public class CustomLogManager
     {
-        readonly Startup startup;
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public CustomLogManager(Startup p_Startup)
+        public CustomLogManager()
         {
-            this.startup = p_Startup;
-            this.startup.LogEvent += Log;
+            StaticEventHandler.LogEvent += Log;
         }
 
         private void Log(object sender, LogEventArgs p_Logevent)

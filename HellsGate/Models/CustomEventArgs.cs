@@ -17,7 +17,7 @@ namespace HellsGate.Models
         }
     }
 
-    public class LogEventArgs : EventArgs
+    public class LogEventArgs : EventArgs, IDisposable
     {
         public TraceLevel Level { get; set; }
         public string Message { get; set; }
@@ -32,6 +32,13 @@ namespace HellsGate.Models
             {
                 Ex = p_Ex;
             }
+        }
+
+        public void Dispose()
+        {
+            this.Message = string.Empty;
+            this.Method = null;
+            this.Ex = null;
         }
     }
 }
