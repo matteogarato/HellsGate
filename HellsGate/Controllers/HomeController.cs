@@ -40,35 +40,7 @@ namespace HellsGate.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-        public AuthType AccessType = AuthType.User;//TODO: add configuration reading
-
-        [HttpGet]
-        public IActionResult VerifyPlate()
-        {
-            using (var context = new Context())
-            {
-                string plate = Request.Form["PLTNMB"];
-                AccessModel newAccess = new AccessModel
-                {
-                    AccessTime = DateTime.Now,
-                    Plate = plate
-                };
-                if (context.Cars.Any(a => a.LicencePlate == plate))
-                {
-                    newAccess.CarEntered = context.Cars.First(a => a.LicencePlate == plate);
-                    newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.CarEntered, AccessType);
-                }
-                else
-                {
-                    //TODO: add plate after confirm
-                }
-                context.Access.Add(newAccess);
-                context.SaveChanges();
-                StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
-            }
-            return View();
-        }
+        }              
 
     }
 }
