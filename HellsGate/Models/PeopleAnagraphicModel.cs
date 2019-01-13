@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HellsGate.Models
 {
     public class PeopleAnagraphicModel
     {
-
-        public int PeopleAnagraphicModelId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public DateTime LastModify { get; set; }
-        public AutorizationLevelModel Auth { get; set; }
+        public ICollection<CarAnagraphicModel> Cars { get; set; }
+        public virtual CardAnagraphicsModel Card { get; set; }
+        public virtual AutorizationLevelModel AutorizationLevel { get; set; }
     }
 }

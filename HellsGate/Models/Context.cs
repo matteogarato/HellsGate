@@ -12,5 +12,6 @@ namespace HellsGate.Models
         public DbSet<CarAnagraphicModel> Cars { get; set; }
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
         public DbSet<AutorizationLevelModel> Autorizations { get; set; }
+        public DbSet<CardAnagraphicsModel> Cards { get; set; }
     }
 }

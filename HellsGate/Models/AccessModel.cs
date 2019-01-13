@@ -7,10 +7,10 @@ namespace HellsGate.Models
 {
     public class AccessModel
     {
-        public int AccessModelId { get; set; }
+        public int Id { get; set; }
         public DateTime AccessTime { get; set; }
         public bool GrantedAccess { get; set; }
-        public string Plate { get; set; }
-        public CarAnagraphicModel CarEntered { get; set; }
+        public virtual CarAnagraphicModel CarEntered { get; set; }
+        public virtual PeopleAnagraphicModel PeopleEntered { get; set; }
     }
 }

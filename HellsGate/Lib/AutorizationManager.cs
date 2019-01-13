@@ -18,5 +18,16 @@ namespace HellsGate.Lib
         {
             return p_CarModel.AutorizationLevel.AuthValue == p_AuthNeeded;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_PeopleModel"></param>
+        /// <param name="p_AuthNeeded"></param>
+        /// <returns></returns>
+        public static bool IsAutorized(PeopleAnagraphicModel p_PeopleModel, AuthType p_AuthNeeded)
+        {
+            return p_PeopleModel.AutorizationLevel.AuthValue == p_AuthNeeded;
+        }
     }
 }

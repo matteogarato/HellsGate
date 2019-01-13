@@ -7,19 +7,17 @@ using HellsGate.Lib;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace HellsGate.Controllers
 {
-    [Route("PlateVerificationApi")]
-    public class PlateVerificationApi : Controller
+    [Route("CardVerificationApi")]
+    public class CardVerificationApi : Controller
     {
         public AuthType AccessType = AuthType.User;//TODO: add configuration reading
-        // GET api/<controller>/5
-        [HttpGet("{PlateNumber}")]
-        public bool Get(string platenumber)
+        [HttpGet("{CardId}")]
+        public bool Get(string CardId)
         {
-            if (string.IsNullOrEmpty(platenumber) || string.IsNullOrEmpty(platenumber.Trim()))
+            if (string.IsNullOrEmpty(CardId) || string.IsNullOrEmpty(CardId.Trim()))
             {
                 return false;
             }
@@ -32,9 +30,9 @@ namespace HellsGate.Controllers
                 };
                 try
                 {
-                    if (context.Cars.Any(a => a.LicencePlate == platenumber))
+                    if (context.Cards.Any(c => c.CardNumber == CardId))
                     {
-                        newAccess.CarEntered = context.Cars.First(a => a.LicencePlate == platenumber);
+                        newAccess.PeopleEntered = context.Cards.First(a => a.CardNumber == CardId).people;
                         newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.CarEntered, AccessType);
                         accessGranted = true;
                     }
@@ -53,6 +51,6 @@ namespace HellsGate.Controllers
             }
             return accessGranted;
         }
-        
+
     }
 }

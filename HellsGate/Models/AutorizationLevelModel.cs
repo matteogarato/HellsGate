@@ -18,8 +18,10 @@ namespace HellsGate.Models
     /// </summary>
     public class AutorizationLevelModel
     {
-        public int AutorizationLevelModelId { get; set; }
+        public int Id { get; set; }
         public string AuthName { get; set; }
         public AuthType AuthValue { get; set; }
+        public virtual PeopleAnagraphicModel people { get; set; }
+        public virtual CarAnagraphicModel car { get; set; }
     }
 }
