@@ -5,7 +5,7 @@ namespace HellsGate
 {
     public class Locator
     {
-        private readonly Startup _startup;
+
         private MailSenderManager _mailSenderManager;
         internal MailSenderManager MailSenderManager
         {
@@ -13,11 +13,11 @@ namespace HellsGate
             {
                 if (_mailSenderManager == null)
                 {
-                    _mailSenderManager = new MailSenderManager(_startup);
+                    _mailSenderManager = new MailSenderManager();
                 }
                 return _mailSenderManager;
             }
-            set
+            private set
             {
                 _mailSenderManager = value;
             }
@@ -25,12 +25,29 @@ namespace HellsGate
 
         internal void Init()
         {
-            MailSenderManager = new MailSenderManager(_startup);
+            MailSenderManager = new MailSenderManager();
+            CustomLogManager = new CustomLogManager();
         }
 
-        public Locator(Startup p_startup)
+        private CustomLogManager _customLogManager;
+        internal CustomLogManager CustomLogManager
         {
-            _startup = p_startup;
+            get
+            {
+                if (_customLogManager == null)
+                {
+                    _customLogManager = new CustomLogManager();
+                }
+                return _customLogManager;
+            }
+            private set
+            {
+                _customLogManager = value;
+            }
+        }
+
+        public Locator()
+        {
             Init();
         }
     }

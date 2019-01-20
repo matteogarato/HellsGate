@@ -53,6 +53,6 @@ namespace HellsGate.Controllers
             }
             return accessGranted;
         }
-        
+
     }
 }

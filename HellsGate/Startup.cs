@@ -61,7 +61,7 @@ namespace HellsGate
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            Locator = new Locator(this);
+            Locator = new Locator();
         }
 
 

@@ -49,6 +49,7 @@ namespace HellsGate.Controllers
                     StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during plate verification", MethodBase.GetCurrentMethod(), ex);
                 }
             }
+
             return accessGranted;
         }
 

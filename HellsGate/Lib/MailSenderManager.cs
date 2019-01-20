@@ -15,7 +15,7 @@ namespace HellsGate.Lib
         private MailMessage mailMessage = new MailMessage();
 
 
-        public MailSenderManager(Startup p_startup)
+        public MailSenderManager()
         {
             client = new SmtpClient
             {
