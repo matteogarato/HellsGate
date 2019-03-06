@@ -8,10 +8,18 @@ namespace HellsGate.Models
 {
     public class Context : DbContext
     {
+        public Context()
+        {
+
+        }
+        public Context(DbContextOptions options) : base(options)
+        {
+            
+        }
         public DbSet<AccessModel> Access { get; set; }
+        public DbSet<AutorizationLevelModel> Autorizations { get; set; }
         public DbSet<CarAnagraphicModel> Cars { get; set; }
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
-        public DbSet<AutorizationLevelModel> Autorizations { get; set; }
-        public DbSet<CardAnagraphicsModel> Cards { get; set; }
+        
     }
 }

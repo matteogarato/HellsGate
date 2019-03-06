@@ -11,23 +11,29 @@ namespace HellsGate.Lib
         /// <summary>
         /// determine if the authorization of the car match the needed Authorization
         /// </summary>
-        /// <param name="p_CarModel">car anagraphic</param>
+        /// <param name="p_CarModelId">car anagraphic</param>
         /// <param name="p_AuthNeeded">needed Authorization</param>
         /// <returns></returns>
-        public static bool IsAutorized(CarAnagraphicModel p_CarModel, AuthType p_AuthNeeded)
+        public static bool IsAutorized(string p_CarModelId, AuthType p_AuthNeeded)
         {
-            return p_CarModel.AutorizationLevel.AuthValue == p_AuthNeeded;
+            using (Context c = new Context())
+            {
+                return c.Cars.FirstOrDefault(ca => ca.LicencePlate == p_CarModelId).AutorizationLevel.AuthValue == p_AuthNeeded;
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="p_PeopleModel"></param>
+        /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        public static bool IsAutorized(PeopleAnagraphicModel p_PeopleModel, AuthType p_AuthNeeded)
+        public static bool IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
         {
-            return p_PeopleModel.AutorizationLevel.AuthValue == p_AuthNeeded;
+            using (Context c = new Context())
+            {
+                return c.Peoples.FirstOrDefault(p => p.Id == p_PeopleModelId).AutorizationLevel.AuthValue == p_AuthNeeded;
+            }
         }
     }
 }

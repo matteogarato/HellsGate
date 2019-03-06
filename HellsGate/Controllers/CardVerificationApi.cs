@@ -30,10 +30,10 @@ namespace HellsGate.Controllers
                 };
                 try
                 {
-                    if (context.Cards.Any(c => c.CardNumber == CardId))
+                    if (context.Peoples.Any(c => c.CardNumber == CardId))
                     {
-                        newAccess.PeopleEntered = context.Cards.First(a => a.CardNumber == CardId).people;
-                        newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.CarEntered, AccessType);
+                        newAccess.PeopleEntered = context.Peoples.First(a => a.CardNumber == CardId).Id;
+                        newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType);
                         accessGranted = true;
                     }
                     else

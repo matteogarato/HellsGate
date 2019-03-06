@@ -34,8 +34,8 @@ namespace HellsGate.Controllers
                 {
                     if (context.Cars.Any(a => a.LicencePlate == platenumber))
                     {
-                        newAccess.CarEntered = context.Cars.First(a => a.LicencePlate == platenumber);
-                        newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.CarEntered, AccessType);
+                        newAccess.Plate = platenumber;
+                        newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(platenumber, AccessType);
                         accessGranted = true;
                     }
                     else

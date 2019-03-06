@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HellsGate.Models
@@ -10,6 +11,5 @@ namespace HellsGate.Models
         public DateTime LastModify { get; set; }
         public virtual PeopleAnagraphicModel Owner { get; set; }
         public virtual AutorizationLevelModel AutorizationLevel { get; set; }
-
     }
 }
