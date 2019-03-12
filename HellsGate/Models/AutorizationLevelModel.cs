@@ -22,6 +22,8 @@ namespace HellsGate.Models
     {
         public int Id { get; set; }
         public string AuthName { get; set; }
+        public DateTime CreationDate { get; set; }
+        public TimeSpan Vaidity { get; set; }
         public AuthType AuthValue { get; set; }
     }
 }

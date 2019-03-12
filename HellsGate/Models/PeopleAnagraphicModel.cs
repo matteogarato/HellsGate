@@ -13,6 +13,6 @@ namespace HellsGate.Models
         public string CardNumber { get; set; }
         public DateTime LastModify { get; set; }
         public ICollection<CarAnagraphicModel> Cars { get; set; }
-        public AutorizationLevelModel AutorizationLevel { get; set; }
+        public virtual AutorizationLevelModel AutorizationLevel { get; set; }
     }
 }

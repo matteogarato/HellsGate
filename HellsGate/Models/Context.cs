@@ -14,12 +14,13 @@ namespace HellsGate.Models
         }
         public Context(DbContextOptions options) : base(options)
         {
-            
+
         }
         public DbSet<AccessModel> Access { get; set; }
         public DbSet<AutorizationLevelModel> Autorizations { get; set; }
+        public DbSet<SafeAuthModel> SafeAuthModels { get; set; }
         public DbSet<CarAnagraphicModel> Cars { get; set; }
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
-        
+
     }
 }
