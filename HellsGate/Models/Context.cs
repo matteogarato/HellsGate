@@ -22,5 +22,32 @@ namespace HellsGate.Models
         public DbSet<CarAnagraphicModel> Cars { get; set; }
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
 
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            //builder.Entity<CarAnagraphicModel>(entity =>
+            //{
+            //    entity.Property(x => x.LicencePlate).HasColumnName("LicencePlate");
+            //
+            //    entity.OwnsOne(p => p.Owner, cb =>
+            //    {
+            //        cb.Property(x => x.Id).HasColumnName("Id");
+            //    });
+            //});
+            builder.Entity<PeopleAnagraphicModel>(entity =>
+            {
+                entity.OwnsOne(a => a.SafeAuthModel, sa =>
+                   {
+                       sa.Property(x => x.Id).HasColumnName("Id");
+                   });
+                entity.OwnsOne(a => a.AutorizationLevel, al =>
+                   {
+                       al.Property(x => x.Id).HasColumnName("Id");
+                   });
+            });
+        }
     }
+
 }
+

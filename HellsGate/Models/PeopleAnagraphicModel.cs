@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace HellsGate.Models
 {
-
     public class PeopleAnagraphicModel
     {
         public int Id { get; set; }
@@ -14,5 +13,7 @@ namespace HellsGate.Models
         public DateTime LastModify { get; set; }
         public ICollection<CarAnagraphicModel> Cars { get; set; }
         public virtual AutorizationLevelModel AutorizationLevel { get; set; }
+        public SafeAuthModel SafeAuthModel { get; set; }
+
     }
 }

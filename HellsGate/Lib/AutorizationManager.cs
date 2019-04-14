@@ -19,7 +19,7 @@ namespace HellsGate.Lib
         {
             using (Context c = new Context())
             {
-                return c.Cars.FirstOrDefault(ca => ca.LicencePlate == p_CarModelId).AutorizationLevel.AuthValue == p_AuthNeeded;
+                return false;//c.Cars.FirstOrDefault(ca => ca.LicencePlate == p_CarModelId).AutorizationLevel.AuthValue == p_AuthNeeded;
             }
         }
 

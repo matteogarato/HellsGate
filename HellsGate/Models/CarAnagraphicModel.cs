@@ -10,6 +10,5 @@ namespace HellsGate.Models
         public string LicencePlate { get; set; }
         public DateTime LastModify { get; set; }
         public virtual PeopleAnagraphicModel Owner { get; set; }
-        public virtual AutorizationLevelModel AutorizationLevel { get; set; }
     }
 }
