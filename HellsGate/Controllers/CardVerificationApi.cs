@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HellsGate.Lib;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace HellsGate.Controllers
 {
@@ -15,7 +15,7 @@ namespace HellsGate.Controllers
     {
         public AuthType AccessType = AuthType.User;//TODO: add configuration reading
         [HttpGet("{CardId}")]
-        public bool Get(string CardId)
+        public async Task<bool> Get(string CardId)
         {
             if (string.IsNullOrEmpty(CardId) || string.IsNullOrEmpty(CardId.Trim()))
             {
@@ -30,18 +30,19 @@ namespace HellsGate.Controllers
                 };
                 try
                 {
-                    if (context.Peoples.Any(c => c.CardNumber == CardId))
+                    if (await context.Peoples.AnyAsync(c => c.CardNumber == CardId))
                     {
-                        newAccess.PeopleEntered = context.Peoples.First(a => a.CardNumber == CardId).Id;
-                        newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType);
+                        var entered = await context.Peoples.FirstAsync(a => a.CardNumber == CardId);
+                        newAccess.PeopleEntered = entered.Id;
+                        newAccess.GrantedAccess = await Lib.AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType);
                         accessGranted = true;
                     }
                     else
                     {
                         //TODO: add plate after confirm
                     }
-                    context.Access.Add(newAccess);
-                    context.SaveChanges();
+                    await context.Access.AddAsync(newAccess);
+                    await context.SaveChangesAsync();
                     StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
                 }
                 catch (Exception ex)

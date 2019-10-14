@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HellsGate.Lib;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,7 +18,7 @@ namespace HellsGate.Controllers
         public AuthType AccessType = AuthType.User;//TODO: add configuration reading
         // GET api/<controller>/5
         [HttpGet("{PlateNumber}")]
-        public bool Get(string platenumber)
+        public async Task<bool> Get(string platenumber)
         {
             if (string.IsNullOrEmpty(platenumber) || string.IsNullOrEmpty(platenumber.Trim()))
             {
@@ -32,18 +33,18 @@ namespace HellsGate.Controllers
                 };
                 try
                 {
-                    if (context.Cars.Any(a => a.LicencePlate == platenumber))
+                    if (await context.Cars.AnyAsync(a => a.LicencePlate == platenumber))
                     {
                         newAccess.Plate = platenumber;
-                        newAccess.GrantedAccess = Lib.AutorizationManager.IsAutorized(platenumber, AccessType);
+                        newAccess.GrantedAccess = await Lib.AutorizationManager.IsAutorized(platenumber, AccessType);
                         accessGranted = true;
                     }
                     else
                     {
                         //TODO: add plate after confirm
                     }
-                    context.Access.Add(newAccess);
-                    context.SaveChanges();
+                    await context.Access.AddAsync(newAccess);
+                    await context.SaveChangesAsync();
                     StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
                 }
                 catch (Exception ex)

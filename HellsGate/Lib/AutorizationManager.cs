@@ -1,4 +1,5 @@
 ﻿using HellsGate.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,12 @@ namespace HellsGate.Lib
         /// <param name="p_CarModelId">car anagraphic</param>
         /// <param name="p_AuthNeeded">needed Authorization</param>
         /// <returns></returns>
-        public static bool IsAutorized(string p_CarModelId, AuthType p_AuthNeeded)
+        public static async Task<bool> IsAutorized(string p_CarModelId, AuthType p_AuthNeeded)
         {
             using (Context c = new Context())
             {
-                return false;//c.Cars.FirstOrDefault(ca => ca.LicencePlate == p_CarModelId).AutorizationLevel.AuthValue == p_AuthNeeded;
+                var car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId);
+                return car.Owner.AutorizationLevel.AuthValue == p_AuthNeeded;
             }
         }
 
@@ -29,9 +31,9 @@ namespace HellsGate.Lib
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        public static bool IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
+        public static async Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
         {
-            return _IsAutorized(p_PeopleModelId, p_AuthNeeded);
+            return await _IsAutorized(p_PeopleModelId, p_AuthNeeded);
         }
 
         /// <summary>
@@ -40,15 +42,15 @@ namespace HellsGate.Lib
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        private static bool _IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
+        private static async Task<bool> _IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
         {
             using (Context c = new Context())
             {
                 bool ret = false;
-                var Usr = c.Peoples.FirstOrDefault(p => p.Id == p_PeopleModelId);
+                var Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId);
                 if (Usr.AutorizationLevel.AuthValue == p_AuthNeeded)
                 {
-                    var certAuth = c.SafeAuthModels.FirstOrDefault(sa => sa.User.Id == Usr.Id);
+                    var certAuth = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.User.Id == Usr.Id);
                     if (certAuth.UserSafe == SafeModel(Usr) && certAuth.AutSafe == SafeModel(Usr.AutorizationLevel))
                     {
                         ret = true;
