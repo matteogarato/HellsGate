@@ -1,18 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace HellsGate.Models
 {
     public enum AuthType
     {
-        Root,
-        Admin,
-        User,
+        OneTimeAccess,
         Guest,
-        OneTimeAccess
+        User,
+        Admin,
+        Root
     }
     /// <summary>
     /// Autorization model for access
