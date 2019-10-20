@@ -1,11 +1,8 @@
-﻿using HellsGate.Models;
+﻿using System.Threading.Tasks;
+using HellsGate.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace HellsGate.Lib
 {
@@ -19,22 +16,11 @@ namespace HellsGate.Lib
         /// <returns></returns>
         public static async Task<bool> IsAutorized(string p_CarModelId, AuthType p_AuthNeeded)
         {
-            using (Context c = new Context())
+            using (var c = new Context())
             {
-                var car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId);
+                CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId);
                 return car.Owner.AutorizationLevel.AuthValue == p_AuthNeeded;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="p_PeopleModelId"></param>
-        /// <param name="p_AuthNeeded"></param>
-        /// <returns></returns>
-        public static async Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
-        {
-            return await _IsAutorized(p_PeopleModelId, p_AuthNeeded);
         }
 
         /// <summary>
@@ -43,9 +29,9 @@ namespace HellsGate.Lib
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        private static async Task<bool> _IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
+        public static async Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
         {
-            using (Context c = new Context())
+            using (var c = new Context())
             {
                 bool ret = false;
                 var Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
@@ -62,6 +48,31 @@ namespace HellsGate.Lib
             return Convert.ToBase64String(EncriptLine(p_textToEncrypt));
         }
 
+        public static async Task<bool> AutorizationModify(int p_PeopleModelIdRequest, int p_PeopleModelId, AuthType p_newAuthorization)
+        {
+            using (var c = new Context())
+            {
+                bool ret = false;
+
+                PeopleAnagraphicModel Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId);
+                //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root 
+                if (p_newAuthorization < Usr.AutorizationLevel.AuthValue && await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == Usr.AutorizationLevel.AuthValue && p.Id != Usr.Id) &&
+                    await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == AuthType.Root && p.Id != Usr.Id))
+                {
+                    Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+                }
+                else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
+                {
+                    PeopleAnagraphicModel UsrRequest = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelIdRequest);
+                    if (Usr.AutorizationLevel.AuthValue == AuthType.Root)
+                    {
+                        Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+                    }
+                }
+                await c.SaveChangesAsync();
+                return ret;
+            }
+        }
         private static byte[] EncriptLine(string p_textToEncrypt)
         {
             byte[] salt;
