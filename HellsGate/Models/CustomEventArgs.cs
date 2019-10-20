@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -6,14 +7,16 @@ namespace HellsGate.Models
 {
     public class MailEventArgs : EventArgs
     {
+        public List<string> Recievers { get; set; }
         public string Subject { get; set; }
         public string Message { get; set; }
         public DateTime TimeOfEvent { get; set; }
-        public MailEventArgs(string p_Subject, string p_Message, DateTime p_TimeOfEvent)
+        public MailEventArgs(string p_Subject, string p_Message, List<string> p_recivers, DateTime p_TimeOfEvent)
         {
             Subject = p_Subject;
             Message = p_Message;
             TimeOfEvent = p_TimeOfEvent;
+            Recievers = p_recivers;
         }
     }
 

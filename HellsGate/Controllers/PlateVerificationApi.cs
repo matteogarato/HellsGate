@@ -45,7 +45,7 @@ namespace HellsGate.Controllers
                     }
                     await context.Access.AddAsync(newAccess);
                     await context.SaveChangesAsync();
-                    StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
+                    //StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody,, DateTime.Now));
                 }
                 catch (Exception ex)
                 {

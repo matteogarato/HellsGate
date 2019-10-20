@@ -33,7 +33,10 @@ namespace HellsGate.Lib
                 {
                     From = new MailAddress("whoever@me.com")
                 };
-                mailMessage.To.Add("receiver@me.com");
+                foreach (var rec in p_mailEvent.Recievers)
+                {
+                    mailMessage.To.Add(rec);
+                }
                 mailMessage.Body = p_mailEvent.Message;
                 mailMessage.Subject = p_mailEvent.Subject;
                 client.Send(mailMessage);

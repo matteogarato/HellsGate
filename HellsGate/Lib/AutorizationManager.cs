@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,44 +48,60 @@ namespace HellsGate.Lib
             using (Context c = new Context())
             {
                 bool ret = false;
-                var Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId);
-                if (Usr.AutorizationLevel.AuthValue == p_AuthNeeded)
+                var Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                if (Usr.AutorizationLevel.AuthValue == p_AuthNeeded && await AuthNotModified(Usr.SafeAuthModel.Id))
                 {
-                    var certAuth = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.User.Id == Usr.Id);
-                    if (certAuth.UserSafe == SafeModel(Usr) && certAuth.AutSafe == SafeModel(Usr.AutorizationLevel))
-                    {
-                        ret = true;
-                    }
+                    return true;
                 }
-                return ret;
+                return false;
             }
         }
 
-        private static byte[] SafeModel(object src)
+        private static string Encryptline(string p_textToEncrypt)
         {
-            string toRet = "";
-            foreach (var prop in src.GetType().GetProperties())
-            {
-                toRet += prop.GetValue(src).ToString();
-            }
-            return CreateMD5(toRet);
+            return Convert.ToBase64String(EncriptLine(p_textToEncrypt));
         }
 
-        public static byte[] CreateMD5(string input)
+        private static byte[] EncriptLine(string p_textToEncrypt)
         {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] hashBytes = md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(input));
-
-                // Convert the byte array to hexadecimal string
-                //StringBuilder sb = new StringBuilder();
-                //for (int i = 0; i < hashBytes.Length; i++)
-                //{
-                //    sb.Append(hashBytes[i].ToString("X2"));
-                //}
-                return hashBytes;
-            }
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            var salted = new Rfc2898DeriveBytes(p_textToEncrypt, salt, 1000);
+            byte[] hash = salted.GetBytes(20);
+            byte[] hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+            return hashBytes;
         }
+
+        private static bool CompareHash(byte[] hashBase, byte[] hashToVerify)
+        {
+            for (int i = 16; i < 20; i++)
+            {
+                if (hashBase[i] != hashToVerify[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static async Task<bool> AuthNotModified(int p_AuthId)
+        {
+            using (Context c = new Context())
+            {
+                var AuthSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.Id == p_AuthId);
+                if (AuthSaved != null)
+                {
+                    return CompareHash(Convert.FromBase64String(AuthSaved.Control), EncriptLine(AuthSaved.AutId.ToString() + AuthSaved.UserId.ToString()));
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+        }
+
     }
 }
