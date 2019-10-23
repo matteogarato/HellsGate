@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using HellsGate.Lib;
@@ -13,7 +11,7 @@ namespace HellsGate.Controllers
     [Route("CardVerificationApi")]
     public class CardVerificationApi : Controller
     {
-        public AuthType AccessType = AuthType.User;//TODO: add configuration reading
+        private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
         [HttpGet("{CardId}")]
         public async Task<bool> Get(string CardId)
         {
@@ -24,25 +22,25 @@ namespace HellsGate.Controllers
             bool accessGranted = false;
             using (var context = new Context())
             {
-                AccessModel newAccess = new AccessModel
+                var newAccess = new AccessModel
                 {
                     AccessTime = DateTime.Now,
                 };
                 try
                 {
-                    if (await context.Peoples.AnyAsync(c => c.CardNumber == CardId))
+                    if (await context.Peoples.AnyAsync(c => c.CardNumber == CardId).ConfigureAwait(false))
                     {
-                        var entered = await context.Peoples.FirstAsync(a => a.CardNumber == CardId);
+                        PeopleAnagraphicModel entered = await context.Peoples.FirstAsync(a => a.CardNumber == CardId).ConfigureAwait(false);
                         newAccess.PeopleEntered = entered.Id;
-                        newAccess.GrantedAccess = await Lib.AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType);
+                        newAccess.GrantedAccess = await Lib.AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType).ConfigureAwait(false);
                         accessGranted = true;
                     }
                     else
                     {
                         //TODO: add plate after confirm
                     }
-                    await context.Access.AddAsync(newAccess);
-                    await context.SaveChangesAsync();
+                    await context.Access.AddAsync(newAccess).ConfigureAwait(false);
+                    await context.SaveChangesAsync().ConfigureAwait(false);
                     //StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
                 }
                 catch (Exception ex)
