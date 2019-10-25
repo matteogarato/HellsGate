@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using HellsGate.Models;
@@ -16,10 +17,18 @@ namespace HellsGate.Lib
         /// <returns></returns>
         public static async Task<bool> IsAutorized(string p_CarModelId, AuthType p_AuthNeeded)
         {
-            using (var c = new Context())
+            try
             {
-                CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId).ConfigureAwait(false);
-                return await IsAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
+                using (var c = new Context())
+                {
+                    CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId).ConfigureAwait(false);
+                    return await IsAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized of CAR", MethodBase.GetCurrentMethod(), ex);
+                return false;
             }
         }
 
@@ -31,69 +40,88 @@ namespace HellsGate.Lib
         /// <returns></returns>
         public static async Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
         {
-            using (var c = new Context())
+            try
             {
-                if (await c.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
+                using (var c = new Context())
                 {
-                    PeopleAnagraphicModel usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
-                    if (usr.AutorizationLevel.AuthValue == p_AuthNeeded
-                        && await AuthNotModified(usr.Id).ConfigureAwait(false)
-                        && usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date)
+                    if (await c.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
                     {
-                        return true;
+                        PeopleAnagraphicModel usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                        if (usr.AutorizationLevel.AuthValue == p_AuthNeeded
+                            && await AuthNotModified(usr.Id).ConfigureAwait(false)
+                            && usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date)
+                        {
+                            return true;
+                        }
+                        return false;
                     }
                     return false;
                 }
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
                 return false;
             }
         }
 
         private static async Task<string> EncryptLineToString(string p_textToEncrypt) => Convert.ToBase64String(await EncriptLine(p_textToEncrypt).ConfigureAwait(false));
 
-        public static async Task<bool> AutorizationModify(int p_PeopleModelIdRequest, int p_PeopleModelId, AuthType p_newAuthorization)
+        public static async Task AutorizationModify(int p_PeopleModelIdRequest, int p_PeopleModelId, AuthType p_newAuthorization)
         {
-            using (var c = new Context())
+            try
             {
-                bool ret = false;
-
-                PeopleAnagraphicModel Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
-                //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root 
-                if (p_newAuthorization < Usr.AutorizationLevel.AuthValue && await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == Usr.AutorizationLevel.AuthValue && p.Id != Usr.Id).ConfigureAwait(false) &&
-                    await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == AuthType.Root && p.Id != Usr.Id).ConfigureAwait(false))
+                using (var c = new Context())
                 {
-                    Usr.AutorizationLevel.AuthValue = p_newAuthorization;
-
-                }
-                else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
-                {
-                    PeopleAnagraphicModel UsrRequest = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelIdRequest).ConfigureAwait(false);
-                    if (Usr.AutorizationLevel.AuthValue == AuthType.Root)
+                    PeopleAnagraphicModel Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                    //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root 
+                    if (p_newAuthorization < Usr.AutorizationLevel.AuthValue && await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == Usr.AutorizationLevel.AuthValue && p.Id != Usr.Id).ConfigureAwait(false) &&
+                        await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == AuthType.Root && p.Id != Usr.Id).ConfigureAwait(false))
                     {
                         Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+
                     }
+                    else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
+                    {
+                        PeopleAnagraphicModel UsrRequest = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelIdRequest).ConfigureAwait(false);
+                        if (Usr.AutorizationLevel.AuthValue == AuthType.Root)
+                        {
+                            Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+                        }
+                    }
+                    await c.SaveChangesAsync().ConfigureAwait(false);
                 }
-                await c.SaveChangesAsync().ConfigureAwait(false);
-                return ret;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during AutorizationModify", MethodBase.GetCurrentMethod(), ex);
             }
         }
 
         private static async Task ModifySafeAut(int p_UserId, int p_newAuthorization, AuthType p_NewAuthType)
         {
-            using (var c = new Context())
+            try
             {
-                var authSaved = new SafeAuthModel();
-                if (await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
+                using (var c = new Context())
                 {
-                    authSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
-                }
-                else
-                {
-                    c.SafeAuthModels.Add(authSaved);
-                }
-                authSaved.AutId = p_newAuthorization;
-                authSaved.Control = await EncryptLineToString(p_UserId.ToString() + p_newAuthorization.ToString() + p_NewAuthType.ToString()).ConfigureAwait(false);
+                    var authSaved = new SafeAuthModel();
+                    if (await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
+                    {
+                        authSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        c.SafeAuthModels.Add(authSaved);
+                    }
+                    authSaved.AutId = p_newAuthorization;
+                    authSaved.Control = await EncryptLineToString(p_UserId.ToString() + p_newAuthorization.ToString() + p_NewAuthType.ToString()).ConfigureAwait(false);
 
-                await c.SaveChangesAsync().ConfigureAwait(false);
+                    await c.SaveChangesAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during ModifySafeAut", MethodBase.GetCurrentMethod(), ex);
             }
         }
         private static Task<byte[]> EncriptLine(string p_textToEncrypt)
@@ -122,23 +150,30 @@ namespace HellsGate.Lib
 
         private static async Task<bool> AuthNotModified(int p_UserId)
         {
-            using (var c = new Context())
+            try
             {
-                if (await c.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false)
-                    && await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
+                using (var c = new Context())
                 {
-                    PeopleAnagraphicModel user = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_UserId).ConfigureAwait(false);
-                    SafeAuthModel authSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
-                    if (authSaved != null)
+                    if (await c.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false)
+                        && await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
                     {
-                        return
-                            await CompareHash(
-                                Convert.FromBase64String(authSaved.Control)
-                                , await EncriptLine(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
+                        PeopleAnagraphicModel user = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_UserId).ConfigureAwait(false);
+                        SafeAuthModel authSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
+                        if (authSaved != null)
+                        {
+                            return
+                                await CompareHash(
+                                    Convert.FromBase64String(authSaved.Control)
+                                    , await EncriptLine(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
+                        }
                     }
+                    return false;
                 }
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during AuthNotModified", MethodBase.GetCurrentMethod(), ex);
                 return false;
-
             }
         }
 
