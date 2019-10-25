@@ -49,7 +49,7 @@ namespace HellsGate.Lib
                         PeopleAnagraphicModel usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
                         if (usr.AutorizationLevel.AuthValue == p_AuthNeeded
                             && await AuthNotModified(usr.Id).ConfigureAwait(false)
-                            && usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date)
+                            && (usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date || usr.AutorizationLevel.AuthValue == AuthType.Root))
                         {
                             return true;
                         }
@@ -79,6 +79,7 @@ namespace HellsGate.Lib
                         await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == AuthType.Root && p.Id != Usr.Id).ConfigureAwait(false))
                     {
                         Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+                        await ModifySafeAut(Usr.Id, Usr.AutorizationLevel.Id, Usr.AutorizationLevel.AuthValue).ConfigureAwait(false);
 
                     }
                     else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
@@ -87,6 +88,7 @@ namespace HellsGate.Lib
                         if (Usr.AutorizationLevel.AuthValue == AuthType.Root)
                         {
                             Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+                            await ModifySafeAut(Usr.Id, Usr.AutorizationLevel.Id, Usr.AutorizationLevel.AuthValue).ConfigureAwait(false);
                         }
                     }
                     await c.SaveChangesAsync().ConfigureAwait(false);

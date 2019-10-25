@@ -14,7 +14,7 @@ namespace HellsGate.Controllers
     {
         private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
         // GET api/<controller>/5
-        [HttpGet("{PlateNumber}")]
+        [HttpPost("{PlateNumber}")]
         public async Task<bool> Get(string platenumber)
         {
             if (string.IsNullOrEmpty(platenumber) || string.IsNullOrEmpty(platenumber.Trim()))
