@@ -19,25 +19,24 @@ namespace HellsGate.Controllers
             {
                 return false;
             }
-            bool accessGranted = false;
+            var newAccess = new AccessModel
+            {
+                AccessTime = DateTime.Now,
+                GrantedAccess = false,
+                CardNumber = CardId
+            };
             using (var context = new Context())
             {
-                var newAccess = new AccessModel
-                {
-                    AccessTime = DateTime.Now,
-                };
                 try
                 {
-                    if (await context.Peoples.AnyAsync(c => c.CardNumber == CardId).ConfigureAwait(false))
+                    if (await context.Peoples.AnyAsync(c => c.CardNumber.CardNumber == CardId).ConfigureAwait(false))
                     {
-                        PeopleAnagraphicModel entered = await context.Peoples.FirstAsync(a => a.CardNumber == CardId).ConfigureAwait(false);
-                        newAccess.PeopleEntered = entered.Id;
-                        newAccess.GrantedAccess = await Lib.AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType).ConfigureAwait(false);
-                        accessGranted = true;
-                    }
-                    else
-                    {
-                        //TODO: add plate after confirm
+                        PeopleAnagraphicModel entered = await context.Peoples.FirstAsync(a => a.CardNumber.CardNumber == CardId).ConfigureAwait(false);
+                        if (await AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType).ConfigureAwait(false))
+                        {
+                            newAccess.PeopleEntered = entered.Id;
+                            newAccess.GrantedAccess = true;
+                        }
                     }
                     await context.Access.AddAsync(newAccess).ConfigureAwait(false);
                     await context.SaveChangesAsync().ConfigureAwait(false);
@@ -49,7 +48,8 @@ namespace HellsGate.Controllers
                 }
             }
 
-            return accessGranted;
+            return newAccess.GrantedAccess;
+            ;
         }
 
     }

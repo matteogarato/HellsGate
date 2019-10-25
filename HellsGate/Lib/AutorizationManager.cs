@@ -19,7 +19,7 @@ namespace HellsGate.Lib
             using (var c = new Context())
             {
                 CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId).ConfigureAwait(false);
-                return car.Owner.AutorizationLevel.AuthValue == p_AuthNeeded;
+                return await IsAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
             }
         }
 
@@ -29,20 +29,26 @@ namespace HellsGate.Lib
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        public static Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
+        public static async Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
         {
             using (var c = new Context())
             {
-                PeopleAnagraphicModel usr = c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (usr.AutorizationLevel.AuthValue == p_AuthNeeded && AuthNotModified(usr.SafeAuthModel.Id).ConfigureAwait(false).GetAwaiter().GetResult())
+                if (await c.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
                 {
-                    return Task.FromResult(true);
+                    PeopleAnagraphicModel usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                    if (usr.AutorizationLevel.AuthValue == p_AuthNeeded
+                        && await AuthNotModified(usr.Id).ConfigureAwait(false)
+                        && usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date)
+                    {
+                        return true;
+                    }
+                    return false;
                 }
-                return Task.FromResult(false);
+                return false;
             }
         }
 
-        private static Task<string> Encryptline(string p_textToEncrypt) => Task.FromResult(Convert.ToBase64String(EncriptLine(p_textToEncrypt).ConfigureAwait(false).GetAwaiter().GetResult()));
+        private static async Task<string> EncryptLineToString(string p_textToEncrypt) => Convert.ToBase64String(await EncriptLine(p_textToEncrypt).ConfigureAwait(false));
 
         public static async Task<bool> AutorizationModify(int p_PeopleModelIdRequest, int p_PeopleModelId, AuthType p_newAuthorization)
         {
@@ -56,6 +62,7 @@ namespace HellsGate.Lib
                     await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == AuthType.Root && p.Id != Usr.Id).ConfigureAwait(false))
                 {
                     Usr.AutorizationLevel.AuthValue = p_newAuthorization;
+
                 }
                 else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
                 {
@@ -67,6 +74,26 @@ namespace HellsGate.Lib
                 }
                 await c.SaveChangesAsync().ConfigureAwait(false);
                 return ret;
+            }
+        }
+
+        private static async Task ModifySafeAut(int p_UserId, int p_newAuthorization, AuthType p_NewAuthType)
+        {
+            using (var c = new Context())
+            {
+                var authSaved = new SafeAuthModel();
+                if (await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
+                {
+                    authSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
+                }
+                else
+                {
+                    c.SafeAuthModels.Add(authSaved);
+                }
+                authSaved.AutId = p_newAuthorization;
+                authSaved.Control = await EncryptLineToString(p_UserId.ToString() + p_newAuthorization.ToString() + p_NewAuthType.ToString()).ConfigureAwait(false);
+
+                await c.SaveChangesAsync().ConfigureAwait(false);
             }
         }
         private static Task<byte[]> EncriptLine(string p_textToEncrypt)
@@ -93,21 +120,26 @@ namespace HellsGate.Lib
             return Task.FromResult(true);
         }
 
-        private static Task<bool> AuthNotModified(int p_AuthId)
+        private static async Task<bool> AuthNotModified(int p_UserId)
         {
             using (var c = new Context())
             {
-                SafeAuthModel authSaved = c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.Id == p_AuthId).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (authSaved != null)
+                if (await c.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false)
+                    && await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
                 {
-                    return Task.FromResult(CompareHash(Convert.FromBase64String(authSaved.Control), EncriptLine(authSaved.AutId.ToString() + authSaved.UserId.ToString()).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                    PeopleAnagraphicModel user = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_UserId).ConfigureAwait(false);
+                    SafeAuthModel authSaved = await c.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
+                    if (authSaved != null)
+                    {
+                        return
+                            await CompareHash(
+                                Convert.FromBase64String(authSaved.Control)
+                                , await EncriptLine(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
+                    }
                 }
-                else
-                {
-                    return Task.FromResult(false);
-                }
-            }
+                return false;
 
+            }
         }
 
     }

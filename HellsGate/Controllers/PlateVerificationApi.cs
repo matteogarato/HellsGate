@@ -21,24 +21,19 @@ namespace HellsGate.Controllers
             {
                 return false;
             }
-            bool accessGranted = false;
+            var newAccess = new AccessModel
+            {
+                AccessTime = DateTime.Now,
+                GrantedAccess = false,
+                Plate = platenumber
+            };
             using (var context = new Context())
             {
-                var newAccess = new AccessModel
-                {
-                    AccessTime = DateTime.Now,
-                };
                 try
                 {
                     if (await context.Cars.AnyAsync(a => a.LicencePlate == platenumber).ConfigureAwait(false))
                     {
-                        newAccess.Plate = platenumber;
-                        newAccess.GrantedAccess = await Lib.AutorizationManager.IsAutorized(platenumber, AccessType).ConfigureAwait(false);
-                        accessGranted = true;
-                    }
-                    else
-                    {
-                        //TODO: add plate after confirm
+                        newAccess.GrantedAccess = await AutorizationManager.IsAutorized(platenumber, AccessType).ConfigureAwait(false);
                     }
                     await context.Access.AddAsync(newAccess).ConfigureAwait(false);
                     await context.SaveChangesAsync().ConfigureAwait(false);
@@ -49,7 +44,7 @@ namespace HellsGate.Controllers
                     StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during plate verification", MethodBase.GetCurrentMethod(), ex);
                 }
             }
-            return accessGranted;
+            return newAccess.GrantedAccess;
         }
 
     }

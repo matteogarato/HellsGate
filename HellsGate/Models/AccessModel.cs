@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HellsGate.Models
 {
@@ -12,5 +9,6 @@ namespace HellsGate.Models
         public bool GrantedAccess { get; set; }
         public string Plate { get; set; }
         public int PeopleEntered { get; set; }
+        public string CardNumber { get; set; }
     }
 }
