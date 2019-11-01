@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Models
 {
-    public class LoginModel
+    public class LoginViewModel
     {
         public string Username { get; set; }
-        public string password { get; set; }
+        public string Password { get; set; }
         public string Errore { get; set; }
     }
 }

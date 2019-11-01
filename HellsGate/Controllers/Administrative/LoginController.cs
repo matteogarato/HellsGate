@@ -17,13 +17,13 @@ namespace HellsGate.Controllers.Administrative
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(LoginModel model)
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model != null)
             {
                 try
                 {
-                    if (await LoginManager.VerifyLogin(await LoginManager.GetUserByInput(model.Username).ConfigureAwait(false), model.password).ConfigureAwait(false))
+                    if (await LoginManager.VerifyLogin(await LoginManager.GetUserByInput(model.Username).ConfigureAwait(false), model.Password).ConfigureAwait(false))
                     {
                         model.Errore = string.Empty;
                         return View("MenuView");
