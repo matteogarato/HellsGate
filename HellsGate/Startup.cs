@@ -34,7 +34,7 @@ namespace HellsGate
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             var conn = Configuration.GetConnectionString("HellsGateDatabase");
             services.AddDbContext<Context>
                 (options => options.UseSqlServer(conn));

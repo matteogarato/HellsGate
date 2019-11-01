@@ -6,6 +6,7 @@ namespace HellsGate.Models
     public class PeopleAnagraphicModel
     {
         public int Id { get; set; }
+        public string Username { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string PhoneNumber { get; set; }
@@ -17,6 +18,11 @@ namespace HellsGate.Models
         public virtual ICollection<CarAnagraphicModel> Cars { get; set; }
         public virtual AutorizationLevelModel AutorizationLevel { get; set; }
         public SafeAuthModel SafeAuthModel { get; set; }
+
+        public PeopleAnagraphicModel()
+        {
+            Id = -1;
+        }
 
     }
 }

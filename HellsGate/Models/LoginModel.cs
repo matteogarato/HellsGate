@@ -9,5 +9,6 @@ namespace HellsGate.Models
     {
         public string Username { get; set; }
         public string password { get; set; }
+        public string Errore { get; set; }
     }
 }
