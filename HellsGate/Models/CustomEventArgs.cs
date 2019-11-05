@@ -7,7 +7,7 @@ namespace HellsGate.Models
 {
     public class MailEventArgs : EventArgs
     {
-        public List<string> Recievers { get; set; }
+        public List<string> Recievers { get; private set; }
         public string Subject { get; set; }
         public string Message { get; set; }
         public DateTime TimeOfEvent { get; set; }

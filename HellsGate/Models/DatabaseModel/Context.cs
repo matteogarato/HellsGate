@@ -21,6 +21,8 @@ namespace HellsGate.Models
         public DbSet<SafeAuthModel> SafeAuthModels { get; set; }
         public DbSet<CarAnagraphicModel> Cars { get; set; }
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
+        public DbSet<MainMenuModel> MainMenu { get; set; }
+        public DbSet<CardModel> CardModels { get; set; }
 
 
 
