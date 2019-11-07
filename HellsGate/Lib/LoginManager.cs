@@ -1,31 +1,54 @@
-﻿using HellsGate.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using HellsGate.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HellsGate.Lib
 {
-    public static class LoginManager
+    public class LoginManager<TUser> : SignInManager<TUser> where TUser : class
     {
 
-        public static async Task<int> GetUserByInput(string UserInput)
+        private readonly UserManager<PeopleAnagraphicModel> _userManager;
+        private readonly IHttpContextAccessor _contextAccessor;
+
+        public LoginManager(
+            UserManager<PeopleAnagraphicModel> userManager,
+            IHttpContextAccessor contextAccessor,
+            IUserClaimsPrincipalFactory<PeopleAnagraphicModel> claimsFactory,
+            IOptions<IdentityOptions> optionsAccessor,
+            ILogger<SignInManager<PeopleAnagraphicModel>> logger,
+            IAuthenticationSchemeProvider schemeProvider
+            )
+            : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemeProvider)
+        {
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+        }
+
+        public async Task<int> GetUserByInputAsync(string UserInput)
         {
             try
             {
-                PeopleAnagraphicModel user = new PeopleAnagraphicModel();
-                if (string.IsNullOrEmpty(UserInput) || string.IsNullOrEmpty(UserInput.Trim())) { return user.Id; }
-                string ToFind = UserInput.Trim();
+                var user = new PeopleAnagraphicModel();
+                if (string.IsNullOrEmpty(UserInput) || string.IsNullOrEmpty(UserInput.Trim()))
+                { return user.Id; }
+                string toFind = UserInput.Trim();
                 using (var c = new Context())
                 {
-                    if (IsValidEmail(ToFind) && await c.Peoples.AnyAsync(p => p.Email == UserInput).ConfigureAwait(false))
+                    if (IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => p.Email == UserInput).ConfigureAwait(false))
                     {
                         user = await c.Peoples.FirstOrDefaultAsync(p => p.Email == UserInput).ConfigureAwait(false);
 
                     }
-                    else if (!IsValidEmail(ToFind) && await c.Peoples.AnyAsync(p => p.Username == UserInput).ConfigureAwait(false))
+                    else if (!IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => p.UserName == UserInput).ConfigureAwait(false))
                     {
-                        user = await c.Peoples.FirstOrDefaultAsync(p => p.Username == UserInput).ConfigureAwait(false);
+                        user = await c.Peoples.FirstOrDefaultAsync(p => p.UserName == UserInput).ConfigureAwait(false);
 
                     }
                     return user.Id;
@@ -52,27 +75,34 @@ namespace HellsGate.Lib
             }
         }
 
-        public static async Task<bool> VerifyLogin(int user, string CyphredPassword)
+        public override async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool rememberMe, bool shouldLockout)
         {
             try
             {
                 using (var c = new Context())
                 {
-                    if (await c.Peoples.AnyAsync(p => p.Id == user).ConfigureAwait(false))
+                    if (await c.Peoples.AnyAsync(p => p.UserName == userName).ConfigureAwait(false))
                     {
-                        var userSelected = await c.Peoples.FirstOrDefaultAsync(p => p.Id == user).ConfigureAwait(false);
-                        return await SecurLib.CompareHash(
+                        PeopleAnagraphicModel userSelected = await c.Peoples.FirstOrDefaultAsync(p => p.UserName == userName).ConfigureAwait(false);
+                        if (await SecurLib.CompareHash(
                                     Convert.FromBase64String(userSelected.Password)
-                                    , await SecurLib.EncriptLine(CyphredPassword).ConfigureAwait(false)).ConfigureAwait(false);
+                                    , await SecurLib.EncriptLine(password).ConfigureAwait(false)).ConfigureAwait(false))
+                        {
+                            return SignInResult.Success;
+                        }
+                        else
+                        {
+                            return SignInResult.Failed;
+                        }
                     }
-                    return false;
+                    return SignInResult.Failed;
 
                 }
             }
             catch (Exception ex)
             {
                 StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
-                throw new System.Exception();
+                return SignInResult.Failed;
             }
         }
 

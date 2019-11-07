@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using HellsGate.Lib;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HellsGate.Controllers.Administrative
 {
     public class LoginController : Controller
     {
+        private readonly LoginManager<PeopleAnagraphicModel> _signInManager;
 
         [HttpPost]
         [AllowAnonymous]
@@ -23,13 +21,17 @@ namespace HellsGate.Controllers.Administrative
             {
                 try
                 {
-                    if (await LoginManager.VerifyLogin(await LoginManager.GetUserByInput(model.Username).ConfigureAwait(false), model.Password).ConfigureAwait(false))
+                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, true, false).ConfigureAwait(false);
+                    if (result.Succeeded)
                     {
                         model.Errore = string.Empty;
                         return View("MenuView");
                     }
-                    model.Errore = "Error during login";
-                    return View(model);
+                    else
+                    {
+                        model.Errore = "Error during login";
+                        return View(model);
+                    }
                 }
                 catch (Exception ex)
                 {

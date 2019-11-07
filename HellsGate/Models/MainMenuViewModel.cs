@@ -1,20 +1,11 @@
-﻿using HellsGate.Lib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using HellsGate.Lib;
 
 namespace HellsGate.Models
 {
     public class MainMenuViewModel
     {
-        private PeopleAnagraphicModel UserAutenticated;
-
-        public List<MainMenuModel> MainMenus 
-        {
-            get {return MenuManager.GetMenuForUser(UserAutenticated.Id); }
-            
-        }
+        public List<MainMenuModel> MainMenus => MenuManager.GetMenuForUser(User.Identity.GetUserId());
 
     }
 }
