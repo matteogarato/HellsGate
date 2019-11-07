@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace HellsGate.Lib
 {
-    public class LoginManager<TUser> : SignInManager<TUser> where TUser : class
+    public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : class
     {
 
         private readonly UserManager<PeopleAnagraphicModel> _userManager;
@@ -23,9 +23,10 @@ namespace HellsGate.Lib
             IUserClaimsPrincipalFactory<PeopleAnagraphicModel> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<PeopleAnagraphicModel>> logger,
-            IAuthenticationSchemeProvider schemeProvider
+            IAuthenticationSchemeProvider schemeProvider,
+            IUserConfirmation<PeopleAnagraphicModel> confirmation
             )
-            : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemeProvider)
+            : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemeProvider, confirmation)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
