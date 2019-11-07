@@ -3,3 +3,5 @@
 https://docs.microsoft.com/it-it/aspnet/core/security/authentication/identity?view=aspnetcore-3.0&tabs=visual-studio
 
 https://www.datatables.net
+
+https://www.c-sharpcorner.com/article/using-datatables-grid-with-asp-net-mvc/
