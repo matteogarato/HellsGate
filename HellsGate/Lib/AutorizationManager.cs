@@ -113,7 +113,7 @@ namespace HellsGate.Lib
                         c.SafeAuthModels.Add(authSaved);
                     }
                     authSaved.AutId = p_newAuthorization;
-                    authSaved.Control = await SecurLib.EncryptLineToString(p_UserId.ToString() + p_newAuthorization.ToString() + p_NewAuthType.ToString()).ConfigureAwait(false);
+                    authSaved.Control = await SecurLib.EncryptLineToStringAsync(p_UserId.ToString() + p_newAuthorization.ToString() + p_NewAuthType.ToString()).ConfigureAwait(false);
 
                     await c.SaveChangesAsync().ConfigureAwait(false);
                 }
@@ -139,9 +139,9 @@ namespace HellsGate.Lib
                         if (authSaved != null)
                         {
                             return
-                                await SecurLib.CompareHash(
+                                await SecurLib.CompareHashAsync(
                                     Convert.FromBase64String(authSaved.Control)
-                                    , await SecurLib.EncriptLine(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
+                                    , await SecurLib.EncriptLineAsync(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
                         }
                     }
                     return false;

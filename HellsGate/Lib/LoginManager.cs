@@ -85,9 +85,9 @@ namespace HellsGate.Lib
                     if (await c.Peoples.AnyAsync(p => p.UserName == userName).ConfigureAwait(false))
                     {
                         PeopleAnagraphicModel userSelected = await c.Peoples.FirstOrDefaultAsync(p => p.UserName == userName).ConfigureAwait(false);
-                        if (await SecurLib.CompareHash(
+                        if (await SecurLib.CompareHashAsync(
                                     Convert.FromBase64String(userSelected.Password)
-                                    , await SecurLib.EncriptLine(password).ConfigureAwait(false)).ConfigureAwait(false))
+                                    , await SecurLib.EncriptLineAsync(password).ConfigureAwait(false)).ConfigureAwait(false))
                         {
                             return SignInResult.Success;
                         }
