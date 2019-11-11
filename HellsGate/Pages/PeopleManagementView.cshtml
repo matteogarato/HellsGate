@@ -6,15 +6,15 @@
 <h2>PeopleManagementView</h2>
 
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<link href="~/Content/bootstrap.css" rel="stylesheet" />
+@*<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>*@
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
 
-<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />*@
 
-<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
-<script>
+@*<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>*@
+@*<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>*@
+@*<script>
     $(document).ready(function () {
         $("#demoGrid").DataTable({
 
@@ -53,10 +53,6 @@
                 }],
 
             "columns": [
-                @*@foreach (var prop in ((PeopleManagerViewModel)Model).Column)
-                {
-                     { "data": "CustomerID", "name": "CustomerID", "autoWidth": true },
-                }*@
                 { "data": "CustomerID", "name": "CustomerID", "autoWidth": true },
                 { "data": "CompanyName", "name": "CompanyName", "autoWidth": true },
                 { "data": "ContactName", "title": "ContactName", "name": "ContactName", "autoWidth": true },
@@ -66,18 +62,16 @@
                 { "data": "Country", "name": "Country", "autoWidth": true },
                 { "data": "Phone", "name": "Phone", "title": "Status", "autoWidth": true },
                 {
-                    "render": function (data, type, full, meta) { return '<a class="btn btn-info" href="/PeopleController/Edit/' + full.CustomerID + '">Edit</a>'; }
+                "render": function (data, type, full, meta) { return '<a class="btn btn-info" href="/PeopleController/Edit/' + full.CustomerID + '">Edit</a>'; }
                 },
                 {
-                    data: null, render: function (data, type, row) {
-                        return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.CustomerID + "'); >Delete</a>";
-                    }
-                },
-
-            ]
-
-        });
-    });
+                data: null, render: function (data, type, row) {
+                return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.CustomerID + "'); >Delete</a>" ;
+                           }
+                           },
+                           ]
+                           });
+                           });
 </script>
 
 <body>
@@ -102,5 +96,5 @@
             </table>
         </div>
     </div>
-</body>
+</body>*@
 

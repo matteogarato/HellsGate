@@ -32,7 +32,7 @@ namespace HellsGate.Controllers
                     if (await context.Peoples.AnyAsync(c => c.CardNumber.CardNumber == CardId).ConfigureAwait(false))
                     {
                         PeopleAnagraphicModel entered = await context.Peoples.FirstAsync(a => a.CardNumber.CardNumber == CardId).ConfigureAwait(false);
-                        if (await AutorizationManager.IsAutorized(newAccess.PeopleEntered, AccessType).ConfigureAwait(false))
+                        if (await AutorizationManager.IsPeopleAutorized(newAccess.PeopleEntered, AccessType).ConfigureAwait(false))
                         {
                             newAccess.PeopleEntered = entered.Id;
                             newAccess.GrantedAccess = true;

@@ -32,13 +32,13 @@ namespace HellsGate.Lib
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public async Task<int> GetUserByInputAsync(string UserInput)
+        public async Task<string> GetUserByInputAsync(string UserInput)
         {
             try
             {
                 var user = new PeopleAnagraphicModel();
                 if (string.IsNullOrEmpty(UserInput) || string.IsNullOrEmpty(UserInput.Trim()))
-                { return user.Id; }
+                { return string.Empty; }
                 string toFind = UserInput.Trim();
                 using (var c = new Context())
                 {

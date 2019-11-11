@@ -14,14 +14,14 @@ namespace HellsGate.Lib
         /// <param name="p_CarModelId">car anagraphic</param>
         /// <param name="p_AuthNeeded">needed Authorization</param>
         /// <returns></returns>
-        public static async Task<bool> IsAutorized(string p_CarModelId, AuthType p_AuthNeeded)
+        public static async Task<bool> IsCarAutorized(string p_CarModelId, AuthType p_AuthNeeded)
         {
             try
             {
                 using (var c = new Context())
                 {
                     CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId).ConfigureAwait(false);
-                    return await IsAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
+                    return await IsPeopleAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -37,7 +37,7 @@ namespace HellsGate.Lib
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        public static async Task<bool> IsAutorized(int p_PeopleModelId, AuthType p_AuthNeeded)
+        public static async Task<bool> IsPeopleAutorized(string p_PeopleModelId, AuthType p_AuthNeeded)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace HellsGate.Lib
             }
         }
 
-        public static async Task AutorizationModify(int p_PeopleModelIdRequest, int p_PeopleModelId, AuthType p_newAuthorization)
+        public static async Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, AuthType p_newAuthorization)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace HellsGate.Lib
             }
         }
 
-        private static async Task ModifySafeAut(int p_UserId, int p_newAuthorization, AuthType p_NewAuthType)
+        private static async Task ModifySafeAut(string p_UserId, int p_newAuthorization, AuthType p_NewAuthType)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace HellsGate.Lib
         }
 
 
-        private static async Task<bool> AuthNotModified(int p_UserId)
+        private static async Task<bool> AuthNotModified(string p_UserId)
         {
             try
             {

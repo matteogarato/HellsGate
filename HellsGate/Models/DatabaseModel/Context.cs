@@ -1,5 +1,6 @@
 ﻿using HellsGate.Lib;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HellsGate.Models
 {
@@ -49,23 +50,23 @@ namespace HellsGate.Models
             {
                 UserName = "admin",
                 Password = await SecurLib.EncryptLineToStringAsync("admin"),
-                Id = 1
-            });
+                Id = Guid.NewGuid().ToString()
+            }) ;
 
-            builder.Entity<AutorizationLevelModel>().HasData(new AutorizationLevelModel()
-            {
-                Id = 1,
-                AuthName = "ROOT",
-                AuthValue = AuthType.Root
-            });
+            //builder.Entity<AutorizationLevelModel>().HasData(new AutorizationLevelModel()
+            //{
+            //    Id = 1,
+            //    AuthName = "ROOT",
+            //    AuthValue = AuthType.Root
+            //});
 
-            builder.Entity<SafeAuthModel>().HasData(new SafeAuthModel()
-            {
-                Id = 1,
-                AutId = 1,
-                UserId = 1,
-                Control = await SecurLib.EncryptLineToStringAsync("1" + "1" + AuthType.Root.ToString()).ConfigureAwait(false)
-            });
+            //builder.Entity<SafeAuthModel>().HasData(new SafeAuthModel()
+            //{
+            //    Id = 1,
+            //    AutId = 1,
+            //    UserId = 1,
+            //    Control = await SecurLib.EncryptLineToStringAsync("1" + "1" + AuthType.Root.ToString()).ConfigureAwait(false)
+            //});
 
         }
     }

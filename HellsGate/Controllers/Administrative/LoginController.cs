@@ -44,6 +44,6 @@ namespace HellsGate.Controllers.Administrative
             model.Errore = "Error during login";
             return View(model);
         }
-
+        public IActionResult Index() => View();
     }
 }

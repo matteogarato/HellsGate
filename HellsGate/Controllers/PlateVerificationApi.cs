@@ -13,11 +13,11 @@ namespace HellsGate.Controllers
     public class PlateVerificationApi : Controller
     {
         private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
-        // GET api/<controller>/5
+        // POST Get
         [HttpPost("{PlateNumber}")]
-        public async Task<bool> Get(string platenumber)
+        public async Task<bool> Get(string PlateNumber)
         {
-            if (string.IsNullOrEmpty(platenumber) || string.IsNullOrEmpty(platenumber.Trim()))
+            if (string.IsNullOrEmpty(PlateNumber) || string.IsNullOrEmpty(PlateNumber.Trim()))
             {
                 return false;
             }
@@ -25,15 +25,15 @@ namespace HellsGate.Controllers
             {
                 AccessTime = DateTime.Now,
                 GrantedAccess = false,
-                Plate = platenumber
+                Plate = PlateNumber
             };
             using (var context = new Context())
             {
                 try
                 {
-                    if (await context.Cars.AnyAsync(a => a.LicencePlate == platenumber).ConfigureAwait(false))
+                    if (await context.Cars.AnyAsync(a => a.LicencePlate == PlateNumber).ConfigureAwait(false))
                     {
-                        newAccess.GrantedAccess = await AutorizationManager.IsAutorized(platenumber, AccessType).ConfigureAwait(false);
+                        newAccess.GrantedAccess = await AutorizationManager.IsPeopleAutorized(PlateNumber, AccessType).ConfigureAwait(false);
                     }
                     await context.Access.AddAsync(newAccess).ConfigureAwait(false);
                     await context.SaveChangesAsync().ConfigureAwait(false);

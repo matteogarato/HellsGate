@@ -10,7 +10,7 @@ namespace HellsGate.Lib
 {
     public class MenuManager
     {
-        public static List<MainMenuModel> GetMenuForUser(int p_UserId)
+        public static List<MainMenuModel> GetMenuForUser(string p_UserId)
         {
             try
             {

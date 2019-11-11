@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace HellsGate.Models
 {
     public class PeopleAnagraphicModel : IdentityUser<string>
     {
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public override string Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
+        public override string Email { get; set; }
+        public override string UserName { get; set; }
         public string Password { get; set; }
         public virtual CardModel CardNumber { get; set; }
         public DateTime LastModify { get; set; }
@@ -18,7 +24,7 @@ namespace HellsGate.Models
 
         public PeopleAnagraphicModel()
         {
-            Id = -1;
+            Id = Guid.NewGuid().ToString();
         }
 
     }
