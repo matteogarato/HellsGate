@@ -5,3 +5,5 @@ https://docs.microsoft.com/it-it/aspnet/core/security/authentication/identity?vi
 https://www.datatables.net
 
 https://www.c-sharpcorner.com/article/using-datatables-grid-with-asp-net-mvc/
+
+https://stackoverflow.com/questions/45805411/asp-net-core-2-0-authentication-middleware

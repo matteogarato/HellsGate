@@ -12,7 +12,7 @@ namespace HellsGate.Controllers
     public class CardVerificationApi : Controller
     {
         private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
-        [HttpPost("{CardId}")]
+        [HttpPost]
         public async Task<bool> Get(string CardId)
         {
             if (string.IsNullOrEmpty(CardId) || string.IsNullOrEmpty(CardId.Trim()))
