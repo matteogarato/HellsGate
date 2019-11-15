@@ -14,7 +14,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     var user = c.Peoples.FirstOrDefault(p => p.Id == p_UserId);
                     return c.MainMenu.Where(c => c.AuthLevel == user.AutorizationLevel.AuthValue).ToList();

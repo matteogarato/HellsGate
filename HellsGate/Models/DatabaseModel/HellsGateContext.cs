@@ -4,13 +4,13 @@ using System;
 
 namespace HellsGate.Models
 {
-    public class Context : DbContext
+    public class HellsGateContext : DbContext
     {
-        public Context()
+        public HellsGateContext()
         {
 
         }
-        public Context(DbContextOptions options) : base(options)
+        public HellsGateContext(DbContextOptions options) : base(options)
         {
 
         }

@@ -25,7 +25,7 @@ namespace HellsGate.Controllers
                 GrantedAccess = false,
                 CardNumber = CardId
             };
-            using (var context = new Context())
+            using (var context = new HellsGateContext())
             {
                 try
                 {

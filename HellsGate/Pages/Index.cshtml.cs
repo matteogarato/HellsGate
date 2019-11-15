@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HellsGate
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         public void OnGet()

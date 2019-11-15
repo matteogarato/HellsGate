@@ -18,7 +18,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId).ConfigureAwait(false);
                     return await IsPeopleAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
@@ -41,7 +41,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     if (await c.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
                     {
@@ -68,7 +68,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     PeopleAnagraphicModel Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
                     //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root 
@@ -101,7 +101,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     var authSaved = new SafeAuthModel();
                     if (await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
@@ -129,7 +129,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     if (await c.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false)
                         && await c.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))

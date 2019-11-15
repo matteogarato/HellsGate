@@ -40,16 +40,16 @@ namespace HellsGate.Lib
                 if (string.IsNullOrEmpty(UserInput) || string.IsNullOrEmpty(UserInput.Trim()))
                 { return string.Empty; }
                 string toFind = UserInput.Trim();
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
-                    if (IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => p.Email == UserInput).ConfigureAwait(false))
+                    if (IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => String.Equals(p.Email, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false))
                     {
-                        user = await c.Peoples.FirstOrDefaultAsync(p => p.Email == UserInput).ConfigureAwait(false);
+                        user = await c.Peoples.FirstOrDefaultAsync(p => String.Equals(p.Email, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
 
                     }
-                    else if (!IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => p.UserName == UserInput).ConfigureAwait(false))
+                    else if (!IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => String.Equals(p.UserName, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false))
                     {
-                        user = await c.Peoples.FirstOrDefaultAsync(p => p.UserName == UserInput).ConfigureAwait(false);
+                        user = await c.Peoples.FirstOrDefaultAsync(p => String.Equals(p.UserName, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
 
                     }
                     return user.Id;
@@ -80,7 +80,7 @@ namespace HellsGate.Lib
         {
             try
             {
-                using (var c = new Context())
+                using (var c = new HellsGateContext())
                 {
                     var userId = await GetUserByInputAsync(userName).ConfigureAwait(false);
                     if (string.IsNullOrEmpty(userId)) { return SignInResult.Failed; }

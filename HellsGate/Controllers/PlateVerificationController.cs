@@ -11,21 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HellsGate.Controllers
 {
-    [Route("api/PlateVerification")]
+    [Route("PlateVerification")]
     [ApiController]
     public class PlateVerificationController : ControllerBase
     {
     private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
-        // GET: api/PateVerification
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
         // GET: api/IsAuthorized/5
         [HttpGet("{PlateNumber}")]
-        [Route("IsAuthorized")]
         public async Task<bool> IsAuthorized(string PlateNumber)
         {
             if (string.IsNullOrEmpty(PlateNumber) || string.IsNullOrEmpty(PlateNumber.Trim()))
@@ -38,7 +31,7 @@ namespace HellsGate.Controllers
                 GrantedAccess = false,
                 Plate = PlateNumber
             };
-            using (var context = new Context())
+            using (var context = new HellsGateContext())
             {
                 try
                 {
@@ -58,22 +51,6 @@ namespace HellsGate.Controllers
             return newAccess.GrantedAccess;
         }
 
-        // POST: api/PateVerification
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT: api/PateVerification/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

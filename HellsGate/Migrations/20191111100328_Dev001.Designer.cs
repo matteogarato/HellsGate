@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HellsGate.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(HellsGateContext))]
     [Migration("20191111100328_Dev001")]
     partial class Dev001
     {

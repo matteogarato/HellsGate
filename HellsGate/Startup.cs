@@ -3,7 +3,9 @@ using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,11 +30,16 @@ namespace HellsGate
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Context>
+            var conn = Configuration.GetConnectionString("HellsGateDatabase");
+            services.AddDbContext<HellsGateContext>
                 (options => options.UseSqlServer(Configuration.GetConnectionString("HellsGateDatabase")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<Context>();
+                .AddEntityFrameworkStores<HellsGateContext>();
             services.AddRazorPages();
+            services.AddControllers();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -75,7 +82,6 @@ namespace HellsGate
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseDatabaseErrorPage();
             }
             else
             {
@@ -94,6 +100,10 @@ namespace HellsGate
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+            });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
 
