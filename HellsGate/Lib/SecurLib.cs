@@ -6,7 +6,6 @@ namespace HellsGate.Lib
 {
     public static class SecurLib
     {
-
         public static Task<byte[]> EncriptLineAsync(string p_textToEncrypt)
         {
             byte[] salt;
@@ -18,7 +17,6 @@ namespace HellsGate.Lib
             Array.Copy(hash, 0, hashBytes, 16, 20);
             return Task.FromResult(hashBytes);
         }
-
 
         public static Task<bool> CompareHashAsync(byte[] hashBase, byte[] hashToVerify)
         {

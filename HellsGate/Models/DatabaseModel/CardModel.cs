@@ -9,6 +9,5 @@ namespace HellsGate.Models
         public string CardNumber { get; set; }
 
         public DateTime ExpirationDate { get; set; }
-
     }
 }

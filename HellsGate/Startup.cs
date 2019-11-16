@@ -18,8 +18,8 @@ namespace HellsGate
 {
     public class Startup
     {
-
         public Locator Locator { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,19 +27,14 @@ namespace HellsGate
 
         public IConfiguration Configuration { get; }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
-            var conn = Configuration.GetConnectionString("HellsGateDatabase");
-            services.AddDbContext<HellsGateContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("HellsGateDatabase")));
+            services.AddDbContext<HellsGateContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HellsGateDatabase")));
+            services.AddScoped(p => new HellsGateContext(p.GetService<DbContextOptions<HellsGateContext>>()));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<HellsGateContext>();
             services.AddRazorPages();
             services.AddControllers();
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -106,6 +101,5 @@ namespace HellsGate
                 endpoints.MapControllers();
             });
         }
-
     }
 }

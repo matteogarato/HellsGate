@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace HellsGate.Models
 {
@@ -11,6 +11,7 @@ namespace HellsGate.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public override string Id { get; set; }
+
         public string Name { get; set; }
         public string Surname { get; set; }
         public override string Email { get; set; }
@@ -26,6 +27,5 @@ namespace HellsGate.Models
         {
             Id = Guid.NewGuid().ToString();
         }
-
     }
 }

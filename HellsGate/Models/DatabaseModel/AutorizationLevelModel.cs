@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HellsGate.Models
 {
@@ -11,6 +11,7 @@ namespace HellsGate.Models
         Admin,
         Root
     }
+
     /// <summary>
     /// Autorization model for access
     /// </summary>

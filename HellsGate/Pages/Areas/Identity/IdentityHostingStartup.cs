@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 
-
 [assembly: HostingStartup(typeof(HellsGate.Areas.Identity.IdentityHostingStartup))]
+
 namespace HellsGate.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup

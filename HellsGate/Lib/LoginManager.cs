@@ -1,19 +1,18 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using HellsGate.Models;
+﻿using HellsGate.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
     public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : class
     {
-
         private readonly UserManager<PeopleAnagraphicModel> _userManager;
         private readonly IHttpContextAccessor _contextAccessor;
 
@@ -45,12 +44,10 @@ namespace HellsGate.Lib
                     if (IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => String.Equals(p.Email, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false))
                     {
                         user = await c.Peoples.FirstOrDefaultAsync(p => String.Equals(p.Email, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
-
                     }
                     else if (!IsValidEmail(toFind) && await c.Peoples.AnyAsync(p => String.Equals(p.UserName, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false))
                     {
                         user = await c.Peoples.FirstOrDefaultAsync(p => String.Equals(p.UserName, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
-
                     }
                     return user.Id;
                 }
@@ -99,7 +96,6 @@ namespace HellsGate.Lib
                         }
                     }
                     return SignInResult.Failed;
-
                 }
             }
             catch (Exception ex)
@@ -108,7 +104,5 @@ namespace HellsGate.Lib
                 return SignInResult.Failed;
             }
         }
-
-
     }
 }

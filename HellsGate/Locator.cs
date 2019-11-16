@@ -1,12 +1,11 @@
 ﻿using HellsGate.Lib;
 
-
 namespace HellsGate
 {
     public class Locator
     {
-
         private MailSenderManager _mailSenderManager;
+
         internal MailSenderManager MailSenderManager
         {
             get
@@ -30,6 +29,7 @@ namespace HellsGate
         }
 
         private CustomLogManager _customLogManager;
+
         internal CustomLogManager CustomLogManager
         {
             get

@@ -7,6 +7,7 @@ namespace HellsGate.Models
     {
         [Key]
         public string LicencePlate { get; set; }
+
         public string Model { get; set; }
         public string Colour { get; set; }
         public DateTime LastModify { get; set; }

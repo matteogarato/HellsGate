@@ -1,18 +1,20 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using HellsGate.Lib;
+﻿using HellsGate.Lib;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
-    [Route("CardVerificationApi")]
-    public class CardVerificationApi : Controller
+    [Route("CardVerification")]
+    [ApiController]
+    public class CardVerificationController : ControllerBase
     {
         private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
-        [HttpPost]
+
+        [HttpGet("{CardId}")]
         public async Task<bool> Get(string CardId)
         {
             if (string.IsNullOrEmpty(CardId) || string.IsNullOrEmpty(CardId.Trim()))
@@ -44,13 +46,11 @@ namespace HellsGate.Controllers
                 }
                 catch (Exception ex)
                 {
-                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during plate verification", MethodBase.GetCurrentMethod(), ex);
+                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Card verification", MethodBase.GetCurrentMethod(), ex);
                 }
             }
 
             return newAccess.GrantedAccess;
-            ;
         }
-
     }
 }

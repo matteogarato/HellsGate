@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using HellsGate.Lib;
+﻿using HellsGate.Lib;
 using HellsGate.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
@@ -15,7 +12,7 @@ namespace HellsGate.Controllers
     [ApiController]
     public class PlateVerificationController : ControllerBase
     {
-    private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
+        private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
 
         // GET: api/IsAuthorized/5
         [HttpGet("{PlateNumber}")]
@@ -50,7 +47,5 @@ namespace HellsGate.Controllers
             }
             return newAccess.GrantedAccess;
         }
-
-
     }
 }

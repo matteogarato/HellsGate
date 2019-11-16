@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HellsGate.Models
 {
     [Owned]
     public class SafeAuthModel
     {
-
         public int Id { get; set; }
         public string UserId { get; set; }
         public int AutId { get; set; }

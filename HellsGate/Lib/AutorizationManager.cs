@@ -1,8 +1,8 @@
-﻿using System;
+﻿using HellsGate.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using HellsGate.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace HellsGate.Lib
 {
@@ -71,13 +71,12 @@ namespace HellsGate.Lib
                 using (var c = new HellsGateContext())
                 {
                     PeopleAnagraphicModel Usr = await c.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
-                    //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root 
+                    //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root
                     if (p_newAuthorization < Usr.AutorizationLevel.AuthValue && await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == Usr.AutorizationLevel.AuthValue && p.Id != Usr.Id).ConfigureAwait(false) &&
                         await c.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == AuthType.Root && p.Id != Usr.Id).ConfigureAwait(false))
                     {
                         Usr.AutorizationLevel.AuthValue = p_newAuthorization;
                         await ModifySafeAut(Usr.Id, Usr.AutorizationLevel.Id, Usr.AutorizationLevel.AuthValue).ConfigureAwait(false);
-
                     }
                     else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
                     {
@@ -124,7 +123,6 @@ namespace HellsGate.Lib
             }
         }
 
-
         private static async Task<bool> AuthNotModified(string p_UserId)
         {
             try
@@ -153,6 +151,5 @@ namespace HellsGate.Lib
                 return false;
             }
         }
-
     }
 }

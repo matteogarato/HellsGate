@@ -1,19 +1,26 @@
 ﻿using HellsGate.Lib;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace HellsGate.Models
 {
     public class HellsGateContext : DbContext
     {
-        public HellsGateContext()
+        public HellsGateContext() : base()
         {
-
         }
+
         public HellsGateContext(DbContextOptions options) : base(options)
         {
-
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
+        {
+            builder.UseSqlServer("Server=X201\\SQLEXPRESS;Database=HellsGateDB;Trusted_Connection=True;ConnectRetryCount=0");
+            base.OnConfiguring(builder);
+        }
+
         public DbSet<AccessModel> Access { get; set; }
         public DbSet<AutorizationLevelModel> Autorizations { get; set; }
         public DbSet<SafeAuthModel> SafeAuthModels { get; set; }
@@ -21,8 +28,6 @@ namespace HellsGate.Models
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
         public DbSet<MainMenuModel> MainMenu { get; set; }
         public DbSet<CardModel> CardModels { get; set; }
-
-
 
         protected override async void OnModelCreating(ModelBuilder builder)
         {
@@ -51,7 +56,7 @@ namespace HellsGate.Models
                 UserName = "admin",
                 Password = await SecurLib.EncryptLineToStringAsync("admin"),
                 Id = Guid.NewGuid().ToString()
-            }) ;
+            });
 
             //builder.Entity<AutorizationLevelModel>().HasData(new AutorizationLevelModel()
             //{
@@ -67,9 +72,6 @@ namespace HellsGate.Models
             //    UserId = 1,
             //    Control = await SecurLib.EncryptLineToStringAsync("1" + "1" + AuthType.Root.ToString()).ConfigureAwait(false)
             //});
-
         }
     }
-
 }
-

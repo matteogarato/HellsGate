@@ -1,11 +1,8 @@
 ﻿using HellsGate.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
@@ -13,7 +10,6 @@ namespace HellsGate.Lib
     {
         private readonly SmtpClient client = new SmtpClient();
         private MailMessage mailMessage = new MailMessage();
-
 
         public MailSenderManager()
         {
