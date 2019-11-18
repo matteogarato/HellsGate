@@ -7,8 +7,11 @@ namespace HellsGate.Models
 {
     public class HellsGateContext : DbContext
     {
-        public HellsGateContext() : base()
+        private readonly string connectionString;
+
+        public HellsGateContext(string connectionString) : base()
         {
+            this.connectionString = connectionString;
         }
 
         public HellsGateContext(DbContextOptions options) : base(options)

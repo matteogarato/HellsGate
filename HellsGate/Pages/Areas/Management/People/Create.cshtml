@@ -1,0 +1,118 @@
+﻿@page
+@model HellsGate.Pages.Areas.Management.CreateModel
+
+<h4>PeopleAnagraphicModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.Name" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.Name" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.Surname" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.Surname" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.Email" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.Email" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.UserName" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.UserName" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.Password" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.Password" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.LastModify" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.LastModify" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.LastModify" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.NormalizedUserName" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.NormalizedUserName" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.NormalizedUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.NormalizedEmail" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.NormalizedEmail" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.NormalizedEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="PeopleAnagraphicModel.EmailConfirmed" /> @Html.DisplayNameFor(model => model.PeopleAnagraphicModel.EmailConfirmed))
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.PasswordHash" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.PasswordHash" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.PasswordHash" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.SecurityStamp" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.SecurityStamp" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.SecurityStamp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.ConcurrencyStamp" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.ConcurrencyStamp" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.ConcurrencyStamp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.PhoneNumber" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.PhoneNumber" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="PeopleAnagraphicModel.PhoneNumberConfirmed" /> @Html.DisplayNameFor(model => model.PeopleAnagraphicModel.PhoneNumberConfirmed))
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="PeopleAnagraphicModel.TwoFactorEnabled" /> @Html.DisplayNameFor(model => model.PeopleAnagraphicModel.TwoFactorEnabled))
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.LockoutEnd" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.LockoutEnd" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.LockoutEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="PeopleAnagraphicModel.LockoutEnabled" /> @Html.DisplayNameFor(model => model.PeopleAnagraphicModel.LockoutEnabled))
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="PeopleAnagraphicModel.AccessFailedCount" class="control-label"></label>
+                <input asp-for="PeopleAnagraphicModel.AccessFailedCount" class="form-control" />
+                <span asp-validation-for="PeopleAnagraphicModel.AccessFailedCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
