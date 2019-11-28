@@ -1,13 +1,14 @@
-﻿using HellsGate.Lib;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace HellsGate.Models
 {
     public class HellsGateContext : DbContext
     {
         private readonly string connectionString;
+
+        public HellsGateContext() : base()
+        {
+        }
 
         public HellsGateContext(string connectionString) : base()
         {
@@ -32,7 +33,7 @@ namespace HellsGate.Models
         public DbSet<MainMenuModel> MainMenu { get; set; }
         public DbSet<CardModel> CardModels { get; set; }
 
-        protected override async void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             //builder.Entity<CarAnagraphicModel>(entity =>
             //{
@@ -54,27 +55,6 @@ namespace HellsGate.Models
                        al.Property(x => x.Id).HasColumnName("Id");
                    });
             });
-            builder.Entity<PeopleAnagraphicModel>().HasData(new PeopleAnagraphicModel()
-            {
-                UserName = "admin",
-                Password = await SecurLib.EncryptLineToStringAsync("admin"),
-                Id = Guid.NewGuid().ToString()
-            });
-
-            //builder.Entity<AutorizationLevelModel>().HasData(new AutorizationLevelModel()
-            //{
-            //    Id = 1,
-            //    AuthName = "ROOT",
-            //    AuthValue = AuthType.Root
-            //});
-
-            //builder.Entity<SafeAuthModel>().HasData(new SafeAuthModel()
-            //{
-            //    Id = 1,
-            //    AutId = 1,
-            //    UserId = 1,
-            //    Control = await SecurLib.EncryptLineToStringAsync("1" + "1" + AuthType.Root.ToString()).ConfigureAwait(false)
-            //});
         }
     }
 }

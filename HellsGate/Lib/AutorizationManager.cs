@@ -64,6 +64,53 @@ namespace HellsGate.Lib
             }
         }
 
+        public static async void CreateAdmin()
+        {
+            try
+            {
+                using (var c = new HellsGateContext())
+                {
+                    if (await c.Peoples.AnyAsync(p => p.UserName == "Admin").ConfigureAwait(false))
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        PeopleAnagraphicModel usr = new PeopleAnagraphicModel()
+                        {
+                            UserName = "Admin",
+                            Email = "Admin@admin.com",
+                            Password = Convert.ToBase64String(await SecurLib.EncriptLineAsync("Admin").ConfigureAwait(false)),
+                        };
+                        var auth = new AutorizationLevelModel()
+                        {
+                            Id = 1,
+                            AuthName = "ROOT",
+                            AuthValue = AuthType.Root
+                        };
+
+                        var safeAuth = new SafeAuthModel()
+                        {
+                            Id = 1,
+                            AutId = 1,
+                            UserId = usr.Id,
+                            Control = await SecurLib.EncryptLineToStringAsync(usr.Id + "1" + AuthType.Root.ToString()).ConfigureAwait(false)
+                        };
+                        usr.AutorizationLevel = auth;
+                        usr.SafeAuthModel = safeAuth;
+                        await c.Autorizations.AddAsync(auth);
+                        await c.SafeAuthModels.AddAsync(safeAuth);
+                        await c.Peoples.AddAsync(usr);
+                        await c.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
+            }
+        }
+
         public static async Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, AuthType p_newAuthorization)
         {
             try

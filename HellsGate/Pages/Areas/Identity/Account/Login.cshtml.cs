@@ -1,3 +1,4 @@
+using HellsGate.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,11 +14,11 @@ namespace HellsGate.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<PeopleAnagraphicModel> _userManager;
+        private readonly SignInManager<PeopleAnagraphicModel> _signInManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+        public LoginModel(SignInManager<PeopleAnagraphicModel> signInManager,
+            UserManager<PeopleAnagraphicModel> userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -3,9 +3,7 @@ using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,8 +29,9 @@ namespace HellsGate
         {
             services.AddDbContext<HellsGateContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HellsGateDatabase")));
             services.AddScoped(p => new HellsGateContext(p.GetService<DbContextOptions<HellsGateContext>>()));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<PeopleAnagraphicModel>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<HellsGateContext>();
+
             services.AddRazorPages();
             services.AddControllers();
 

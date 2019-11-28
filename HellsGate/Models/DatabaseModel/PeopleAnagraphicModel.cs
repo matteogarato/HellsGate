@@ -21,7 +21,7 @@ namespace HellsGate.Models
         public DateTime LastModify { get; set; }
         public virtual ICollection<CarAnagraphicModel> Cars { get; set; }
         public virtual AutorizationLevelModel AutorizationLevel { get; set; }
-        public SafeAuthModel SafeAuthModel { get; set; }
+        public virtual SafeAuthModel SafeAuthModel { get; set; }
 
         public PeopleAnagraphicModel()
         {
