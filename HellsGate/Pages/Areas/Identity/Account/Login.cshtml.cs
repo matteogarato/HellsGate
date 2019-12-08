@@ -67,7 +67,7 @@ namespace HellsGate.Areas.Identity.Pages.Account
 
         #region snippet
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostLoginAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 
