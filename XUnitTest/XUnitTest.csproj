@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestLib\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HellsGate\HellsGate.csproj" />
   </ItemGroup>
 
