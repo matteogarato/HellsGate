@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace XUnitTest.TestLib
+﻿namespace XUnitTest.TestLib
 {
-    class TestSecurLib
+    internal class TestSecurLib
     {
     }
 }

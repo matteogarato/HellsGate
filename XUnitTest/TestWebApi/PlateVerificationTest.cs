@@ -1,7 +1,4 @@
 ﻿using HellsGate.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace XUnitTest.TestWebApi
@@ -12,7 +9,7 @@ namespace XUnitTest.TestWebApi
 
         [Theory]
         [InlineData("AA123BB")]
-        public void AdminCard(string value)
+        public void AdminPlate(string value)
         {
             Assert.True(_test.Get(value).Result);
         }
