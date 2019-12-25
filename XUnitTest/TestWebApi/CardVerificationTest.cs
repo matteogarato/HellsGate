@@ -5,12 +5,11 @@ namespace XUnitTest.TestWebApi
 {
     public class CardVerificationTest
     {
-        private CardVerificationController _test;
-
         [Theory]
         [InlineData("AA123BB")]
         public void AdminCard(string value)
         {
+            CardVerificationController _test = new CardVerificationController();
             Assert.True(_test.Get(value).Result);
         }
     }
