@@ -1,4 +1,5 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Lib.Interfaces;
+using HellsGate.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,10 +12,11 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
-    public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : class
+    public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : class, ILoginManager
     {
         private readonly UserManager<PeopleAnagraphicModel> _userManager;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ISecurLib SecurLib;
 
         public LoginManager(
             UserManager<PeopleAnagraphicModel> userManager,
@@ -59,20 +61,6 @@ namespace HellsGate.Lib
             }
         }
 
-        private static bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch (Exception ex)
-            {
-                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "not a valid email", MethodBase.GetCurrentMethod(), ex);
-                return false;
-            }
-        }
-
         public override async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool rememberMe, bool shouldLockout)
         {
             try
@@ -102,6 +90,20 @@ namespace HellsGate.Lib
             {
                 StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
                 return SignInResult.Failed;
+            }
+        }
+
+        private static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "not a valid email", MethodBase.GetCurrentMethod(), ex);
+                return false;
             }
         }
     }

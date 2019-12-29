@@ -1,4 +1,5 @@
 ﻿using HellsGate.Lib;
+using HellsGate.Lib.Interfaces;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace HellsGate.Controllers
     public class PlateVerificationController : ControllerBase
     {
         private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
+        private readonly IAccessManager AccessManager;
 
         [HttpGet("{PlateNumber}")]
         public async Task<bool> Get(string PlateNumber)
@@ -27,24 +29,8 @@ namespace HellsGate.Controllers
                 GrantedAccess = false,
                 Plate = PlateNumber
             };
-            using (var context = new HellsGateContext())
-            {
-                try
-                {
-                    if (await context.Cars.AnyAsync(a => a.LicencePlate == PlateNumber).ConfigureAwait(false))
-                    {
-                        newAccess.GrantedAccess = await AutorizationManager.IsPeopleAutorized(PlateNumber, AccessType).ConfigureAwait(false);
-                    }
-                    await context.Access.AddAsync(newAccess).ConfigureAwait(false);
-                    await context.SaveChangesAsync().ConfigureAwait(false);
-                    //StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody,, DateTime.Now));
-                }
-                catch (Exception ex)
-                {
-                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during plate verification", MethodBase.GetCurrentMethod(), ex);
-                }
-            }
-            return newAccess.GrantedAccess;
+
+            return await AccessManager.Access(newAccess, AccessType);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Lib.Interfaces;
+using HellsGate.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
@@ -6,22 +7,24 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
-    public static class AutorizationManager
+    public class AutorizationManager : IAutorizationManager
     {
+        private readonly ISecurLib SecurLib;
+
         /// <summary>
         /// determine if the authorization of the car match the needed Authorization
         /// </summary>
         /// <param name="p_CarModelId">car anagraphic</param>
         /// <param name="p_AuthNeeded">needed Authorization</param>
         /// <returns></returns>
-        public static async Task<bool> IsCarAutorized(string p_CarModelId, AuthType p_AuthNeeded)
+        public async Task<bool> IsCarAutorized(string p_CarModelId, AuthType p_AuthNeeded)
         {
             try
             {
                 using (var c = new HellsGateContext())
                 {
                     CarAnagraphicModel car = await c.Cars.FirstOrDefaultAsync(ca => ca.LicencePlate == p_CarModelId).ConfigureAwait(false);
-                    return await IsPeopleAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
+                    return await IsAutorized(car.Owner.Id, p_AuthNeeded).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -37,7 +40,7 @@ namespace HellsGate.Lib
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        public static async Task<bool> IsPeopleAutorized(string p_PeopleModelId, AuthType p_AuthNeeded)
+        public async Task<bool> IsAutorized(string p_PeopleModelId, AuthType p_AuthNeeded)
         {
             try
             {
@@ -59,12 +62,12 @@ namespace HellsGate.Lib
             }
             catch (Exception ex)
             {
-                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized of people", MethodBase.GetCurrentMethod(), ex);
                 return false;
             }
         }
 
-        public static async void CreateAdmin()
+        public async void CreateAdmin()
         {
             try
             {
@@ -111,7 +114,7 @@ namespace HellsGate.Lib
             }
         }
 
-        public static async Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, AuthType p_newAuthorization)
+        public async Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, AuthType p_newAuthorization)
         {
             try
             {
@@ -143,7 +146,7 @@ namespace HellsGate.Lib
             }
         }
 
-        private static async Task ModifySafeAut(string p_UserId, int p_newAuthorization, AuthType p_NewAuthType)
+        private async Task ModifySafeAut(string p_UserId, int p_newAuthorization, AuthType p_NewAuthType)
         {
             try
             {
@@ -170,7 +173,7 @@ namespace HellsGate.Lib
             }
         }
 
-        private static async Task<bool> AuthNotModified(string p_UserId)
+        private async Task<bool> AuthNotModified(string p_UserId)
         {
             try
             {

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using HellsGate.Lib.Interfaces;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
-    public static class AsyncHelper
+    public class AsyncHelper : IAsyncHelper
     {
         private static readonly TaskFactory _taskFactory = new
             TaskFactory(CancellationToken.None,
@@ -12,14 +13,14 @@ namespace HellsGate.Lib
                         TaskContinuationOptions.None,
                         TaskScheduler.Default);
 
-        public static TResult RunSync<TResult>(Func<Task<TResult>> func)
+        public TResult RunSync<TResult>(Func<Task<TResult>> func)
             => _taskFactory
                 .StartNew(func)
                 .Unwrap()
                 .GetAwaiter()
                 .GetResult();
 
-        public static void RunSync(Func<Task> func)
+        public void RunSync(Func<Task> func)
             => _taskFactory
                 .StartNew(func)
                 .Unwrap()

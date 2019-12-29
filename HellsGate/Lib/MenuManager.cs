@@ -1,4 +1,5 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Lib.Interfaces;
+using HellsGate.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,9 @@ using System.Reflection;
 
 namespace HellsGate.Lib
 {
-    public class MenuManager
+    public class MenuManager : IMenuManager
     {
-        public static List<MainMenuModel> GetMenuForUser(string p_UserId)
+        public List<MainMenuModel> GetMenuForUser(string p_UserId)
         {
             try
             {
