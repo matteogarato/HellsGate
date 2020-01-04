@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace HellsGate.Models
 {
@@ -32,6 +34,7 @@ namespace HellsGate.Models
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
         public DbSet<MainMenuModel> MainMenu { get; set; }
         public DbSet<CardModel> CardModels { get; set; }
+        public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -55,6 +58,8 @@ namespace HellsGate.Models
                        al.Property(x => x.Id).HasColumnName("Id");
                    });
             });
+
+            builder.Entity<IdentityUserClaim<string>>().HasKey(p => new { p.Id });
         }
     }
 }

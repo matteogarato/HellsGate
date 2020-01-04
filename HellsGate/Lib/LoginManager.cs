@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
-    public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : class, ILoginManager
+    public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : PeopleAnagraphicModel
     {
         private readonly UserManager<PeopleAnagraphicModel> _userManager;
         private readonly IHttpContextAccessor _contextAccessor;
