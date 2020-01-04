@@ -1,10 +1,7 @@
-﻿using HellsGate.Lib;
-using HellsGate.Lib.Interfaces;
+﻿using HellsGate.Lib.Interfaces;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
