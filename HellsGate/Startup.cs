@@ -34,7 +34,7 @@ namespace HellsGate
 
             services.AddRazorPages();
             services.AddControllers();
-
+            services.AddTransient<MainMenuViewModel, MainMenuViewModel>();
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
