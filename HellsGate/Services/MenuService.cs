@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using System.Reflection;
+
 namespace HellsGate.Services
 {
     public class MenuService : IMenuService
@@ -47,6 +49,27 @@ namespace HellsGate.Services
                 StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during GetMenuForUser", MethodBase.GetCurrentMethod(), ex);
                 return null;
             }
+        }
+
+        public List<MainMenuModel> CreateMenuFromPages()
+        {
+            var menu = new List<MainMenuModel>();
+            foreach (var page in GetTypesInNamespace(Assembly.GetExecutingAssembly(), "HellsGate.Pages"))
+            {
+                menu.Add(new MainMenuModel()
+                {
+                    Text = page.Name
+                }); ;
+            }
+            return menu;
+        }
+
+        private Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)
+        {
+            return
+              assembly.GetTypes()
+                      .Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
+                      .ToArray();
         }
     }
 }

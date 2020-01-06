@@ -60,6 +60,12 @@ namespace HellsGate.Models
             });
 
             builder.Entity<IdentityUserClaim<string>>().HasKey(p => new { p.Id });
+
+            //drop data of table menu
+            MainMenu.RemoveRange(this.MainMenu);
+            //to be recreated here
+            var menuService = new Services.MenuService();
+            MainMenu.AddRange(menuService.CreateMenuFromPages());
         }
     }
 }
