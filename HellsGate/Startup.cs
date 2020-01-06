@@ -1,4 +1,5 @@
 ﻿using HellsGate.Models;
+using HellsGate.Services;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +35,7 @@ namespace HellsGate
 
             services.AddRazorPages();
             services.AddControllers();
-            services.AddTransient<MainMenuViewModel, MainMenuViewModel>();
+            services.AddTransient<MenuService, MenuService>();
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.

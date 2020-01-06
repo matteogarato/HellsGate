@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject HellsGate.Services.MenuService menus
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,18 +10,39 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            @Html.PartialAsync("_MainMenu")
-        </nav>
 
         <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                </li>
+            @*<ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                    </li>
+                </ul>*@
+            <ul class="nav navbar-nav">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                @if (User.Identity.IsAuthenticated)
+                {
+
+                    @foreach (var menuNames in menus.GetMenuForUser(User.Identity.Name)?.Where(m => m.ParentMenu == null))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller=@menuNames.Controller
+                               asp-action=@menuNames.Action>@menuNames.Text</a>
+                            <ul class="sub-menu">
+                                @foreach (var subMenu in menus.GetMenuForUser(User.Identity.Name)?.Where(n => n.ParentMenu == @menuNames.Id))
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller=@subMenu.Controller
+                                           asp-action=@subMenu.Action>@subMenu.Text</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                }
             </ul>
         </div>
     </header>
