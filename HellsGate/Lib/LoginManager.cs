@@ -12,20 +12,20 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Lib
 {
-    public class LoginManager<TUser> : SignInManager<PeopleAnagraphicModel> where TUser : PeopleAnagraphicModel
+    public class LoginManager<TUser> : SignInManager<TUser> where TUser : PeopleAnagraphicModel
     {
-        private readonly UserManager<PeopleAnagraphicModel> _userManager;
+        private readonly UserManager<TUser> _userManager;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ISecurLib SecurLib;
 
         public LoginManager(
-            UserManager<PeopleAnagraphicModel> userManager,
+            UserManager<TUser> userManager,
             IHttpContextAccessor contextAccessor,
-            IUserClaimsPrincipalFactory<PeopleAnagraphicModel> claimsFactory,
+            IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
-            ILogger<SignInManager<PeopleAnagraphicModel>> logger,
+            ILogger<SignInManager<TUser>> logger,
             IAuthenticationSchemeProvider schemeProvider,
-            IUserConfirmation<PeopleAnagraphicModel> confirmation
+            IUserConfirmation<TUser> confirmation
             )
             : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemeProvider, confirmation)
         {
@@ -61,13 +61,13 @@ namespace HellsGate.Lib
             }
         }
 
-        public override async Task<SignInResult> PasswordSignInAsync(string userName, string password, bool rememberMe, bool shouldLockout)
+        public override async Task<SignInResult> PasswordSignInAsync(string username, string password, bool rememberMe, bool shouldLockout)
         {
             try
             {
                 using (var c = new HellsGateContext())
                 {
-                    var userId = await GetUserByInputAsync(userName).ConfigureAwait(false);
+                    var userId = await GetUserByInputAsync(username).ConfigureAwait(false);
                     if (string.IsNullOrEmpty(userId)) { return SignInResult.Failed; }
                     if (await c.Peoples.AnyAsync(p => p.Id == userId).ConfigureAwait(false))
                     {

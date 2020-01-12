@@ -1,3 +1,4 @@
+using HellsGate.Lib;
 using HellsGate.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,9 @@ namespace HellsGate.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<PeopleAnagraphicModel> _userManager;
-        private readonly SignInManager<PeopleAnagraphicModel> _signInManager;
+        private readonly LoginManager<PeopleAnagraphicModel> _signInManager;
 
-        public LoginModel(SignInManager<PeopleAnagraphicModel> signInManager,
+        public LoginModel(LoginManager<PeopleAnagraphicModel> signInManager,
             UserManager<PeopleAnagraphicModel> userManager)
         {
             _userManager = userManager;
@@ -37,6 +38,8 @@ namespace HellsGate.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            public string Username { get; set; }
+
             [EmailAddress]
             public string Email { get; set; }
 
@@ -76,8 +79,7 @@ namespace HellsGate.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout,
                 // set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email,
-                                   Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, false);
                 if (result.Succeeded)
                 {
                     //_logger.LogInformation("User logged in.");
