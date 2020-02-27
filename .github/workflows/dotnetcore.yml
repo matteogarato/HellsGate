@@ -14,4 +14,4 @@ jobs:
       with:
         dotnet-version: 3.0.103
     - name: Build with dotnet
-      run: dotnet build --configuration Release HellsGate/HellsGate.sln
+      run: dotnet build --configuration Release HellsGate.sln
