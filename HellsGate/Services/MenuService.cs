@@ -4,9 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-
-using System.Reflection;
 
 namespace HellsGate.Services
 {
@@ -16,6 +13,11 @@ namespace HellsGate.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(p_UserName))
+                {
+                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "p_UserName is null or empty", MethodBase.GetCurrentMethod());
+                    return null;
+                }
                 var user = new PeopleAnagraphicModel();
                 using (var _ctx = new HellsGateContext())
                 {
@@ -38,6 +40,11 @@ namespace HellsGate.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(p_Auth))
+                {
+                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "p_Auth is null or empty", MethodBase.GetCurrentMethod());
+                    return null;
+                }
                 var authlevel = (AuthType)Convert.ToInt32(p_Auth);
                 using (var _ctx = new HellsGateContext())
                 {
