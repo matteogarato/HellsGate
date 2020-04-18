@@ -1,6 +1,6 @@
-﻿namespace HellsGate.Models
+﻿namespace HellsGate.Models.DatabaseModel
 {
-    public class MainMenuModel
+    public class MainMenuModel : BaseModel
     {
         public int Id { get; set; }
 
@@ -8,6 +8,6 @@
         public string Text { get; set; }
         public string Action { get; set; }
         public string Controller { get; set; }
-        public AuthType AuthLevel { get; set; }
+        public WellknownAuthorizationLevel AuthLevel { get; set; }
     }
 }

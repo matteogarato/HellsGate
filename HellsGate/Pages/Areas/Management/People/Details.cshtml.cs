@@ -1,4 +1,4 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Models.DatabaseModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,9 +10,9 @@ namespace HellsGate.Pages.Areas.Management
     [Authorize]
     public class DetailsModel : PageModel
     {
-        private readonly HellsGate.Models.HellsGateContext _context;
+        private readonly HellsGateContext _context;
 
-        public DetailsModel(HellsGate.Models.HellsGateContext context)
+        public DetailsModel(HellsGateContext context)
         {
             _context = context;
         }

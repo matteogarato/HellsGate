@@ -1,5 +1,5 @@
 ﻿using HellsGate.Infrastructure;
-using HellsGate.Models;
+using HellsGate.Models.DatabaseModel;
 using HellsGate.Services;
 using log4net;
 using log4net.Config;

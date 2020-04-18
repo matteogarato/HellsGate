@@ -1,4 +1,4 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;

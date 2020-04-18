@@ -1,4 +1,4 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Models.DatabaseModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +10,9 @@ namespace HellsGate.Pages.Areas.Management
     [Authorize]
     public class IndexModel : PageModel
     {
-        private readonly HellsGate.Models.HellsGateContext _context;
+        private readonly HellsGateContext _context;
 
-        public IndexModel(HellsGate.Models.HellsGateContext context)
+        public IndexModel(HellsGateContext context)
         {
             _context = context;
         }

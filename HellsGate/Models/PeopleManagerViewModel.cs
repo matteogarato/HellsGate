@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HellsGate.Models.DatabaseModel;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace HellsGate.Models

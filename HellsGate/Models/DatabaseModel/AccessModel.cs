@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace HellsGate.Models
+namespace HellsGate.Models.DatabaseModel
 {
-    public class AccessModel
+    public class AccessModel : BaseModel
     {
         public int Id { get; set; }
         public DateTime AccessTime { get; set; }

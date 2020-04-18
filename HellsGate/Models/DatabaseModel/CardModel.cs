@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace HellsGate.Models
+namespace HellsGate.Models.DatabaseModel
 {
-    public class CardModel
+    public class CardModel : BaseModel
     {
         [Key]
         public string CardNumber { get; set; }

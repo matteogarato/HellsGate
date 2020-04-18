@@ -1,4 +1,4 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Models.DatabaseModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,9 +9,9 @@ namespace HellsGate.Pages.Areas.Management
     [Authorize]
     public class CreateModel : PageModel
     {
-        private readonly HellsGate.Models.HellsGateContext _context;
+        private readonly HellsGateContext _context;
 
-        public CreateModel(HellsGate.Models.HellsGateContext context)
+        public CreateModel(HellsGateContext context)
         {
             _context = context;
         }

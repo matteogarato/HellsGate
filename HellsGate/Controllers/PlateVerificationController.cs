@@ -1,4 +1,5 @@
 ﻿using HellsGate.Models;
+using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace HellsGate.Controllers
     [ApiController]
     public class PlateVerificationController : ControllerBase
     {
-        private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
+        private readonly WellknownAuthorizationLevel AccessType = WellknownAuthorizationLevel.User;//TODO: add configuration reading
         private readonly IAccessManagerService _accessManager;
 
         public PlateVerificationController(IAccessManagerService accessManager)

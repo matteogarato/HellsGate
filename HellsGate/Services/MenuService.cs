@@ -1,4 +1,5 @@
 ﻿using HellsGate.Models;
+using HellsGate.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace HellsGate.Services
                     StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "p_Auth is null or empty", MethodBase.GetCurrentMethod());
                     return null;
                 }
-                var authlevel = (AuthType)Convert.ToInt32(p_Auth);
+                var authlevel = (WellknownAuthorizationLevel)Convert.ToInt32(p_Auth);
 
                 return _context.MainMenu.Where(c => c.AuthLevel == authlevel).ToList();
             }

@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 
-namespace HellsGate.Models
+namespace HellsGate.Models.DatabaseModel
 {
     [Owned]
-    public class SafeAuthModel
+    public class SafeAuthModel : BaseModel
     {
         public int Id { get; set; }
         public string UserId { get; set; }
         public int AutId { get; set; }
         public string Control { get; set; }
-        public DateTime DtIns { get; set; }
     }
 }

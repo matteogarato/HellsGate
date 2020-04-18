@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace HellsGate.Models
+namespace HellsGate.Models.DatabaseModel
 {
     public class HellsGateContext : DbContext
     {

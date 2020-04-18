@@ -1,4 +1,4 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Models.DatabaseModel;
 using System.Collections.Generic;
 
 namespace HellsGate.Services
