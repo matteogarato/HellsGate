@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace HellsGate.Lib.Interfaces
+namespace HellsGate.Services.Interfaces
 {
-    public interface ISecurLib
+    public interface ISecurLibService
     {
         public Task<byte[]> EncriptLineAsync(string p_textToEncrypt);
 

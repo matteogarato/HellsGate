@@ -1,5 +1,5 @@
-using HellsGate.Lib;
 using HellsGate.Models;
+using HellsGate.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,9 +16,9 @@ namespace HellsGate.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<PeopleAnagraphicModel> _userManager;
-        private readonly LoginManager<PeopleAnagraphicModel> _signInManager;
+        private readonly LoginManagerService<PeopleAnagraphicModel> _signInManager;
 
-        public LoginModel(LoginManager<PeopleAnagraphicModel> signInManager,
+        public LoginModel(LoginManagerService<PeopleAnagraphicModel> signInManager,
             UserManager<PeopleAnagraphicModel> userManager)
         {
             _userManager = userManager;
@@ -70,7 +70,7 @@ namespace HellsGate.Areas.Identity.Pages.Account
 
         #region snippet
 
-        public async Task<IActionResult> OnPostLoginAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 

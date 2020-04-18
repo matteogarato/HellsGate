@@ -1,5 +1,5 @@
-using HellsGate.Lib;
 using HellsGate.Models;
+using HellsGate.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,10 +11,10 @@ namespace HellsGate.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly LoginManager<PeopleAnagraphicModel> _signInManager;
+        private readonly LoginManagerService<PeopleAnagraphicModel> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(LoginManager<PeopleAnagraphicModel> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(LoginManagerService<PeopleAnagraphicModel> signInManager, ILogger<LogoutModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

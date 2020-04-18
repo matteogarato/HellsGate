@@ -1,9 +1,9 @@
 ﻿using HellsGate.Models;
 using System.Threading.Tasks;
 
-namespace HellsGate.Lib.Interfaces
+namespace HellsGate.Services.Interfaces
 {
-    public interface IAutorizationManager
+    public interface IAutorizationManagerService
     {
         public Task<bool> IsCarAutorized(string p_CarModelId, AuthType p_AuthNeeded);
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace HellsGate.Lib.Interfaces
+namespace HellsGate.Services.Interfaces
 {
-    public interface IAsyncHelper
+    public interface IAsyncHelperService
     {
         public TResult RunSync<TResult>(Func<Task<TResult>> func);
 

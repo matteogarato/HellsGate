@@ -1,11 +1,11 @@
-﻿using HellsGate.Lib.Interfaces;
+﻿using HellsGate.Services.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HellsGate.Lib
+namespace HellsGate.Services
 {
-    public class AsyncHelper : IAsyncHelper
+    public class AsyncHelperService : IAsyncHelperService
     {
         private static readonly TaskFactory _taskFactory = new
             TaskFactory(CancellationToken.None,

@@ -4,14 +4,14 @@ using System.Net;
 using System.Net.Mail;
 using System.Reflection;
 
-namespace HellsGate.Lib
+namespace HellsGate.Services
 {
-    public class MailSenderManager
+    public class MailSenderManagerService
     {
         private readonly SmtpClient client = new SmtpClient();
         private MailMessage mailMessage = new MailMessage();
 
-        public MailSenderManager()
+        public MailSenderManagerService()
         {
             client = new SmtpClient
             {

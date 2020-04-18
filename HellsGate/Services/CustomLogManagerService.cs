@@ -1,12 +1,12 @@
 ﻿using HellsGate.Models;
 
-namespace HellsGate.Lib
+namespace HellsGate.Services
 {
-    public class CustomLogManager
+    public class CustomLogManagerService
     {
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public CustomLogManager()
+        public CustomLogManagerService()
         {
             StaticEventHandler.LogEvent += Log;
         }

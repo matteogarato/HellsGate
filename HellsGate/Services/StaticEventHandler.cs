@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace HellsGate.Lib
+namespace HellsGate.Services
 {
     public static class StaticEventHandler
     {

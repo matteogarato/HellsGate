@@ -1,18 +1,18 @@
-﻿using HellsGate.Lib;
+﻿using HellsGate.Services;
 
 namespace HellsGate
 {
     public class Locator
     {
-        private MailSenderManager _mailSenderManager;
+        private MailSenderManagerService _mailSenderManager;
 
-        internal MailSenderManager MailSenderManager
+        internal MailSenderManagerService MailSenderManager
         {
             get
             {
                 if (_mailSenderManager == null)
                 {
-                    _mailSenderManager = new MailSenderManager();
+                    _mailSenderManager = new MailSenderManagerService();
                 }
                 return _mailSenderManager;
             }
@@ -24,19 +24,19 @@ namespace HellsGate
 
         internal void Init()
         {
-            MailSenderManager = new MailSenderManager();
-            CustomLogManager = new CustomLogManager();
+            MailSenderManager = new MailSenderManagerService();
+            CustomLogManager = new CustomLogManagerService();
         }
 
-        private CustomLogManager _customLogManager;
+        private CustomLogManagerService _customLogManager;
 
-        internal CustomLogManager CustomLogManager
+        internal CustomLogManagerService CustomLogManager
         {
             get
             {
                 if (_customLogManager == null)
                 {
-                    _customLogManager = new CustomLogManager();
+                    _customLogManager = new CustomLogManagerService();
                 }
                 return _customLogManager;
             }

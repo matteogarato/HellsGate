@@ -6,25 +6,12 @@ namespace HellsGate.Models
 {
     public class HellsGateContext : DbContext
     {
-        private readonly string connectionString;
-
-        public HellsGateContext() : base()
+        public HellsGateContext()
         {
-        }
-
-        public HellsGateContext(string connectionString) : base()
-        {
-            this.connectionString = connectionString;
         }
 
         public HellsGateContext(DbContextOptions options) : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        {
-            builder.UseSqlServer("Server=X201\\SQLEXPRESS;Database=HellsGateDB;Trusted_Connection=True;ConnectRetryCount=0");
-            base.OnConfiguring(builder);
         }
 
         public DbSet<AccessModel> Access { get; set; }

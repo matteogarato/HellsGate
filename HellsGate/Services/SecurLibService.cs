@@ -1,11 +1,11 @@
-﻿using HellsGate.Lib.Interfaces;
+﻿using HellsGate.Services.Interfaces;
 using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace HellsGate.Lib
+namespace HellsGate.Services
 {
-    public class SecurLib : ISecurLib
+    public class SecurLibService : ISecurLibService
     {
         public Task<byte[]> EncriptLineAsync(string p_textToEncrypt)
         {

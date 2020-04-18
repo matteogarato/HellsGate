@@ -1,4 +1,5 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Infrastructure;
+using HellsGate.Models;
 using HellsGate.Services;
 using log4net;
 using log4net.Config;
@@ -28,12 +29,13 @@ namespace HellsGate
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<HellsGateContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HellsGateDatabase")));
-            services.AddScoped(p => new HellsGateContext(p.GetService<DbContextOptions<HellsGateContext>>()));
+            services.AddDbContext<HellsGateContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("HellsGateContext")));
             services.AddDefaultIdentity<PeopleAnagraphicModel>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<HellsGateContext>();
 
             services.AddRazorPages();
+            services.AddHellsGateApi();
             services.AddControllers();
             services.AddTransient<MenuService, MenuService>();
             services.Configure<IdentityOptions>(options =>
@@ -72,7 +74,7 @@ namespace HellsGate
             Locator = new Locator();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration con)
         {
             if (env.IsDevelopment())
             {
@@ -91,6 +93,7 @@ namespace HellsGate
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.AddHellsGateApi();
 
             app.UseEndpoints(endpoints =>
             {

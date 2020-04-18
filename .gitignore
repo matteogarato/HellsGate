@@ -463,3 +463,5 @@ ASALocalRun/
 
 
 # End of https://www.gitignore.io/api/aspnetcore,visualstudio
+/HellsGate/appsettings.json
+/HellsGate/appsettings.json

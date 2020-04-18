@@ -1,17 +1,24 @@
-﻿using HellsGate.Lib.Interfaces;
-using HellsGate.Models;
+﻿using HellsGate.Models;
+using HellsGate.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
+    [Authorize]
     [Route("CardVerification")]
     [ApiController]
     public class CardVerificationController : ControllerBase
     {
         private readonly AuthType AccessType = AuthType.User;//TODO: add configuration reading
-        private readonly IAccessManager AccessManager;
+        private readonly IAccessManagerService _accessManager;
+
+        public CardVerificationController(IAccessManagerService accessManager)
+        {
+            _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
+        }
 
         [HttpGet("{CardId}")]
         public async Task<bool> Get(string CardId)
@@ -27,7 +34,7 @@ namespace HellsGate.Controllers
                 CardNumber = CardId
             };
 
-            return await AccessManager.Access(newAccess, AccessType); ;
+            return await _accessManager.Access(newAccess, AccessType); ;
         }
     }
 }

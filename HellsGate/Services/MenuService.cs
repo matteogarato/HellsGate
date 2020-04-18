@@ -1,5 +1,4 @@
-﻿using HellsGate.Lib;
-using HellsGate.Models;
+﻿using HellsGate.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,13 @@ namespace HellsGate.Services
 {
     public class MenuService : IMenuService
     {
+        private readonly HellsGateContext _context;
+
+        public MenuService(HellsGateContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
         public List<MainMenuModel> GetMenuForUser(string p_UserName)
         {
             try
@@ -19,10 +25,8 @@ namespace HellsGate.Services
                     return null;
                 }
                 var user = new PeopleAnagraphicModel();
-                using (var _ctx = new HellsGateContext())
-                {
-                    user = _ctx.Peoples.FirstOrDefault(p => p.UserName == p_UserName);
-                }
+                user = _context.Peoples.FirstOrDefault(p => p.UserName == p_UserName);
+
                 if (user != null && user.AutorizationLevel != null)
                 {
                     return GetMenuForAuthorization(user.AutorizationLevel.AuthValue.ToString());
@@ -46,10 +50,8 @@ namespace HellsGate.Services
                     return null;
                 }
                 var authlevel = (AuthType)Convert.ToInt32(p_Auth);
-                using (var _ctx = new HellsGateContext())
-                {
-                    return _ctx.MainMenu.Where(c => c.AuthLevel == authlevel).ToList();
-                }
+
+                return _context.MainMenu.Where(c => c.AuthLevel == authlevel).ToList();
             }
             catch (Exception ex)
             {
