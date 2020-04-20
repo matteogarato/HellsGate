@@ -1,4 +1,5 @@
 ﻿using HellsGate.Models;
+using HellsGate.Models.Context;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,14 @@ namespace HellsGate.Services
     public class AutorizationManagerService : IAutorizationManagerService
     {
         private readonly ISecurLibService _securLib;
+        private readonly IMenuService _menuService;
         private readonly HellsGateContext _context;
 
-        public AutorizationManagerService(ISecurLibService securLib, HellsGateContext context)
+        public AutorizationManagerService(ISecurLibService securLib, IMenuService menuService, HellsGateContext context)
         {
             _securLib = securLib ?? throw new ArgumentNullException(nameof(securLib));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService));
         }
 
         /// <summary>
@@ -69,43 +72,42 @@ namespace HellsGate.Services
             }
         }
 
-        public async void CreateAdmin()
+        public async Task CreateAdmin()
         {
             try
             {
-                if (await _context.Peoples.AnyAsync(p => p.UserName == "Admin").ConfigureAwait(false))
+                PeopleAnagraphicModel usr = new PeopleAnagraphicModel()
                 {
-                    return;
-                }
-                else
+                    UserName = "Admin",
+                    Email = "Admin@admin.com",
+                    Password = Convert.ToBase64String(await _securLib.EncriptLineAsync("Admin").ConfigureAwait(false)),
+                };
+                var auth = new AutorizationLevelModel()
                 {
-                    PeopleAnagraphicModel usr = new PeopleAnagraphicModel()
-                    {
-                        UserName = "Admin",
-                        Email = "Admin@admin.com",
-                        Password = Convert.ToBase64String(await _securLib.EncriptLineAsync("Admin").ConfigureAwait(false)),
-                    };
-                    var auth = new AutorizationLevelModel()
-                    {
-                        Id = 1,
-                        AuthName = "ROOT",
-                        AuthValue = WellknownAuthorizationLevel.Root
-                    };
+                    Id = 1,
+                    AuthName = "ROOT",
+                    AuthValue = WellknownAuthorizationLevel.Root
+                };
 
-                    var safeAuth = new SafeAuthModel()
-                    {
-                        Id = 1,
-                        AutId = 1,
-                        UserId = usr.Id,
-                        Control = await _securLib.EncryptLineToStringAsync(usr.Id + "1" + WellknownAuthorizationLevel.Root.ToString()).ConfigureAwait(false)
-                    };
-                    usr.AutorizationLevel = auth;
-                    usr.SafeAuthModel = safeAuth;
-                    await _context.Autorizations.AddAsync(auth);
-                    await _context.SafeAuthModels.AddAsync(safeAuth);
-                    await _context.Peoples.AddAsync(usr);
-                    await _context.SaveChangesAsync();
+                var safeAuth = new SafeAuthModel()
+                {
+                    Id = 1,
+                    AutId = 1,
+                    UserId = usr.Id,
+                    Control = await _securLib.EncryptLineToStringAsync(usr.Id + "1" + WellknownAuthorizationLevel.Root.ToString()).ConfigureAwait(false)
+                };
+                usr.AutorizationLevel = auth;
+                usr.SafeAuthModel = safeAuth;
+                _context.Autorizations.Add(auth);
+                _context.SafeAuthModels.Add(safeAuth);
+                _context.Peoples.Add(usr);
+                var menu = _menuService.CreateMenuFromPages();
+                foreach (var vm in menu)
+                {
+                    vm.AuthLevel = HellsGate.Models.WellknownAuthorizationLevel.User;
                 }
+                _context.MainMenu.AddRange(menu);
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {

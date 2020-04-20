@@ -9,7 +9,7 @@ namespace HellsGate.Services.Interfaces
 
         public Task<bool> IsAutorized(string p_PeopleModelId, WellknownAuthorizationLevel p_AuthNeeded);
 
-        public void CreateAdmin();
+        public Task CreateAdmin();
 
         public Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, WellknownAuthorizationLevel p_newAuthorization);
     }

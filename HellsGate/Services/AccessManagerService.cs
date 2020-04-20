@@ -1,5 +1,6 @@
 ﻿using HellsGate.Extension;
 using HellsGate.Models;
+using HellsGate.Models.Context;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +35,7 @@ namespace HellsGate.Services
         public async Task<bool> Access(AccessModel newAccess, WellknownAuthorizationLevel AccessType)
         {
             newAccess.GrantedAccess = false;
-            if (!string.IsNullOrEmpty(newAccess.PeopleEntered) || !string.IsNullOrEmpty(newAccess.Plate))
+            if (!string.IsNullOrEmpty(newAccess.PeopleEntered) || !string.IsNullOrEmpty(newAccess.Plate) || !string.IsNullOrEmpty(newAccess.CardNumber))
             {
                 try
                 {

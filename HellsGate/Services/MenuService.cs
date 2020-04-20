@@ -1,5 +1,7 @@
 ﻿using HellsGate.Models;
+using HellsGate.Models.Context;
 using HellsGate.Models.DatabaseModel;
+using HellsGate.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +66,7 @@ namespace HellsGate.Services
         public List<MainMenuModel> CreateMenuFromPages()
         {
             var menu = new List<MainMenuModel>();
-            foreach (var page in GetTypesInNamespace(Assembly.GetExecutingAssembly(), "HellsGate.Pages"))
+            foreach (var page in GetTypesInNamespace(Assembly.GetExecutingAssembly(), "HellsGate.Pages.Areas"))
             {
                 menu.Add(new MainMenuModel()
                 {
@@ -78,7 +80,7 @@ namespace HellsGate.Services
         {
             return
               assembly.GetTypes()
-                      .Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
+                      .Where(t => t.Namespace != null && t.Namespace.ToLower().StartsWith(nameSpace.ToLower()))
                       .ToArray();
         }
     }

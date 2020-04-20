@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HellsGate.Models.DatabaseModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace HellsGate.Models.DatabaseModel
+namespace HellsGate.Models.Context
 {
     public class HellsGateContext : DbContext
     {

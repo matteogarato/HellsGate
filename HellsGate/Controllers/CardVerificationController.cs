@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("CardVerification")]
     [ApiController]
     public class CardVerificationController : ControllerBase
@@ -21,6 +21,7 @@ namespace HellsGate.Controllers
             _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
         }
 
+        [AllowAnonymous]
         [HttpGet("{CardId}")]
         public async Task<bool> Get(string CardId)
         {

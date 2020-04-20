@@ -1,4 +1,5 @@
 ﻿using HellsGate.Infrastructure;
+using HellsGate.Models.Context;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services;
 using log4net;
@@ -37,7 +38,7 @@ namespace HellsGate
             services.AddRazorPages();
             services.AddHellsGateApi();
             services.AddControllers();
-            services.AddTransient<MenuService, MenuService>();
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -72,6 +73,9 @@ namespace HellsGate
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             Locator = new Locator();
+
+            // Register the Swagger services
+            services.AddSwaggerDocument();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration con)
@@ -94,6 +98,9 @@ namespace HellsGate
             app.UseAuthentication();
             app.UseAuthorization();
             app.AddHellsGateApi();
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {

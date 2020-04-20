@@ -6,15 +6,18 @@ using System;
 
 namespace HellsGate.Controllers
 {
-    [Authorize]
+    //[Authorize]
+    [Route("Authentication")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAccessManagerService _accessManagerService;
+        private readonly IAutorizationManagerService _autorizationManagerService;
 
-        public AuthenticationController(IAccessManagerService accessManagerService)
+        public AuthenticationController(IAccessManagerService accessManagerService, IAutorizationManagerService autorizationManagerService)
         {
             _accessManagerService = accessManagerService ?? throw new ArgumentNullException(nameof(accessManagerService));
+            _autorizationManagerService = autorizationManagerService ?? throw new ArgumentNullException(nameof(autorizationManagerService));
         }
 
         [AllowAnonymous]
@@ -27,6 +30,14 @@ namespace HellsGate.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             return Ok(user);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("CreateAdmin")]
+        public IActionResult CreateAdmin()
+        {
+            _autorizationManagerService.CreateAdmin();
+            return Ok();
         }
     }
 }

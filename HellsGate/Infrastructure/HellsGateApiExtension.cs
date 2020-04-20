@@ -9,12 +9,12 @@ namespace HellsGate.Infrastructure
     {
         public static void AddHellsGateApi(this IServiceCollection services)
         {
-            services.AddSingleton<IAccessManagerService, AccessManagerService>();
-            services.AddSingleton<IAsyncHelperService, AsyncHelperService>();
-            services.AddSingleton<IAutorizationManagerService, AutorizationManagerService>();
+            services.AddScoped<IAccessManagerService, AccessManagerService>();
+            services.AddScoped<IAsyncHelperService, AsyncHelperService>();
+            services.AddScoped<IAutorizationManagerService, AutorizationManagerService>();
             //services.AddSingleton<ILoginManagerService, LoginManagerService>();
-            services.AddSingleton<IMenuService, MenuService>();
-            services.AddSingleton<ISecurLibService, SecurLibService>();
+            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<ISecurLibService, SecurLibService>();
         }
 
         public static void AddHellsGateApi(this IApplicationBuilder app)
