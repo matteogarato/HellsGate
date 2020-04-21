@@ -43,11 +43,24 @@ namespace HellsGate.Services
             }
         }
 
-        public override async Task<SignInResult> PasswordSignInAsync(string username, string password, bool rememberMe, bool shouldLockout)
+        public override async Task<SignInResult> PasswordSignInAsync(string username, string password, bool isPersistent, bool lockoutOnFailure)
         {
             try
             {
-                return await _accessManagerService.ValidateLoginAsync(username, password, rememberMe, shouldLockout);
+                return await _accessManagerService.ValidateLoginAsync(username, password, isPersistent, lockoutOnFailure);
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
+                return SignInResult.Failed;
+            }
+        }
+
+        public override async Task<SignInResult> PasswordSignInAsync(TUser user, string password, bool isPersistent, bool lockoutOnFailure)
+        {
+            try
+            {
+                return await _accessManagerService.ValidateLoginAsync(user.UserName, password, isPersistent, lockoutOnFailure);
             }
             catch (Exception ex)
             {

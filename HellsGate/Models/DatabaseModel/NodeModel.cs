@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HellsGate.Models.DatabaseModel
 {
     public class NodeModel : BaseModel
     {
         [Key]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         public string MacAddress { get; set; }
 

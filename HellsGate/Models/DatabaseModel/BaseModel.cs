@@ -6,7 +6,7 @@ namespace HellsGate.Models.DatabaseModel
     {
         public DateTime? LastUpdated { get; set; }
         public string LastUpdatedBy { get; set; }
-        public DateTime LastCreated { get; set; }
-        public string LastCreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

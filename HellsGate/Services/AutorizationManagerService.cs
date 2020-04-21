@@ -185,9 +185,6 @@ namespace HellsGate.Services
                                 , await _securLib.EncriptLineAsync(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
                     }
                 }
-#if DEBUG
-                return true;
-#endif
                 return false;
             }
             catch (Exception ex)

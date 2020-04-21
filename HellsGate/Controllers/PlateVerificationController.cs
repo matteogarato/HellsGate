@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace HellsGate.Controllers
 {
     [Authorize]
-    [Route("PlateVerification")]
+    [Route("api/PlateVerification")]
     [ApiController]
     public class PlateVerificationController : ControllerBase
     {
@@ -22,11 +22,11 @@ namespace HellsGate.Controllers
         }
 
         [HttpGet("{PlateNumber}")]
-        public async Task<bool> Get(string PlateNumber)
+        public async Task<IActionResult> GetAsync(string PlateNumber)
         {
-            if (string.IsNullOrEmpty(PlateNumber) || string.IsNullOrEmpty(PlateNumber.Trim()))
+            if (string.IsNullOrWhiteSpace(PlateNumber))
             {
-                return false;
+                return BadRequest();
             }
             var newAccess = new AccessModel
             {
@@ -35,7 +35,12 @@ namespace HellsGate.Controllers
                 Plate = PlateNumber
             };
 
-            return await _accessManager.Access(newAccess, AccessType);
+            var granted = await _accessManager.Access(newAccess, AccessType);
+            if (!granted)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }

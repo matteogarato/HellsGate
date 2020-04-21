@@ -3,11 +3,12 @@ using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
     //[Authorize]
-    [Route("Authentication")]
+    [Route("api/Authentication")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -20,11 +21,12 @@ namespace HellsGate.Controllers
             _autorizationManagerService = autorizationManagerService ?? throw new ArgumentNullException(nameof(autorizationManagerService));
         }
 
+        [Route("")]
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        [HttpPost]
+        public async Task<IActionResult> AuthenticateAsync([FromBody]AuthenticateModel model)
         {
-            var user = _accessManagerService.ValidateLoginAsync(model.Username, model.Password, false, false);
+            var user = await _accessManagerService.ValidateLoginAsync(model.Username, model.Password, false, false);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -32,8 +34,9 @@ namespace HellsGate.Controllers
             return Ok(user);
         }
 
+        [Route("CreateAdmin")]
         [AllowAnonymous]
-        [HttpPost("CreateAdmin")]
+        [HttpPost]
         public IActionResult CreateAdmin()
         {
             _autorizationManagerService.CreateAdmin();

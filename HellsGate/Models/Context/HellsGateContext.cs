@@ -1,7 +1,6 @@
 ﻿using HellsGate.Models.DatabaseModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace HellsGate.Models.Context
 {
@@ -22,7 +21,9 @@ namespace HellsGate.Models.Context
         public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
         public DbSet<MainMenuModel> MainMenu { get; set; }
         public DbSet<CardModel> CardModels { get; set; }
-        public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }
+
+        //public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }
+        public DbSet<NodeModel> Nodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

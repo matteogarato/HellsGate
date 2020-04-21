@@ -16,10 +16,5 @@ namespace HellsGate.Infrastructure
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<ISecurLibService, SecurLibService>();
         }
-
-        public static void AddHellsGateApi(this IApplicationBuilder app)
-        {
-            //app.UseResponseCompression();
-        }
     }
 }

@@ -23,11 +23,11 @@ namespace HellsGate.Controllers
 
         [AllowAnonymous]
         [HttpGet("{CardId}")]
-        public async Task<bool> Get(string CardId)
+        public async Task<IActionResult> GetAsync(string CardId)
         {
-            if (string.IsNullOrEmpty(CardId) || string.IsNullOrEmpty(CardId.Trim()))
+            if (string.IsNullOrWhiteSpace(CardId))
             {
-                return false;
+                return BadRequest();
             }
             var newAccess = new AccessModel
             {
@@ -36,7 +36,12 @@ namespace HellsGate.Controllers
                 CardNumber = CardId
             };
 
-            return await _accessManager.Access(newAccess, AccessType); ;
+            var granted = await _accessManager.Access(newAccess, AccessType);
+            if (!granted)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }
