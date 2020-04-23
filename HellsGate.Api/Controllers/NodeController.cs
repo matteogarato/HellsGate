@@ -22,7 +22,7 @@ namespace HellsGate.Controllers
 
         [Route("{Id}")]
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetAsync(Guid Id)
         {
             if (Id.Equals(Guid.Empty))

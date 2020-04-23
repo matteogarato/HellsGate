@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace HellsGate.Migrations
+namespace HellsGate.Api.Migrations
 {
     public partial class Dev001 : Migration
     {
@@ -13,6 +13,10 @@ namespace HellsGate.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     AccessTime = table.Column<DateTime>(nullable: false),
                     GrantedAccess = table.Column<bool>(nullable: false),
                     Plate = table.Column<string>(nullable: true),
@@ -29,6 +33,10 @@ namespace HellsGate.Migrations
                 columns: table => new
                 {
                     CardNumber = table.Column<string>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     ExpirationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -37,11 +45,46 @@ namespace HellsGate.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdentityUserClaim<string>",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: true),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityUserClaim<string>", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IdentityUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityUserClaims", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MainMenu",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    ParentMenu = table.Column<int>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     Action = table.Column<string>(nullable: true),
                     Controller = table.Column<string>(nullable: true),
@@ -50,6 +93,24 @@ namespace HellsGate.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MainMenu", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Nodes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    MacAddress = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    AuthValue = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Nodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,6 +154,10 @@ namespace HellsGate.Migrations
                 columns: table => new
                 {
                     PeopleAnagraphicModelId = table.Column<string>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     Id = table.Column<int>(nullable: false),
                     AuthName = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: false),
@@ -115,9 +180,12 @@ namespace HellsGate.Migrations
                 columns: table => new
                 {
                     LicencePlate = table.Column<string>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     Model = table.Column<string>(nullable: true),
                     Colour = table.Column<string>(nullable: true),
-                    LastModify = table.Column<DateTime>(nullable: false),
                     OwnerId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -136,11 +204,14 @@ namespace HellsGate.Migrations
                 columns: table => new
                 {
                     PeopleAnagraphicModelId = table.Column<string>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: true),
+                    LastUpdatedBy = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
                     Id = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
                     AutId = table.Column<int>(nullable: false),
-                    Control = table.Column<string>(nullable: true),
-                    DtIns = table.Column<DateTime>(nullable: false)
+                    Control = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -152,11 +223,6 @@ namespace HellsGate.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Peoples",
-                columns: new[] { "Id", "AccessFailedCount", "CardNumber1", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastModify", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "0885da9b-ba4f-4698-9419-ff8eb8f9d3ec", 0, null, "1a8baee8-a724-4529-b8d2-8f200e3418a4", null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, null, null, null, "ZmbpVrIuW/wiGze/tuyOaUCrA+onxN5OaHtuKANmccGLvETB", null, null, false, null, null, false, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cars_OwnerId",
@@ -181,7 +247,16 @@ namespace HellsGate.Migrations
                 name: "Cars");
 
             migrationBuilder.DropTable(
+                name: "IdentityUserClaim<string>");
+
+            migrationBuilder.DropTable(
+                name: "IdentityUserClaims");
+
+            migrationBuilder.DropTable(
                 name: "MainMenu");
+
+            migrationBuilder.DropTable(
+                name: "Nodes");
 
             migrationBuilder.DropTable(
                 name: "SafeAuthModels");
