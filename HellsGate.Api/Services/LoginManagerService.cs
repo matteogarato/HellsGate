@@ -30,18 +30,18 @@ namespace HellsGate.Services
             _accessManagerService = accessManagerService ?? throw new ArgumentNullException(nameof(accessManagerService));
         }
 
-        public async Task<string> GetUserByInputAsync(string UserInput)
-        {
-            try
-            {
-                return await _accessManagerService.GetUserByInputAsync(UserInput);
-            }
-            catch (Exception ex)
-            {
-                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
-                throw new System.Exception();
-            }
-        }
+        //public async Task<Guid> GetUserByInputAsync(string UserInput)
+        //{
+        //    try
+        //    {
+        //        return await _accessManagerService.GetUserByInputAsync(UserInput);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
+        //        throw new System.Exception();
+        //    }
+        //}
 
         public override async Task<SignInResult> PasswordSignInAsync(string username, string password, bool isPersistent, bool lockoutOnFailure)
         {

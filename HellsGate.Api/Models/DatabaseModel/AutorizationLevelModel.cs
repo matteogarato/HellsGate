@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HellsGate.Models.DatabaseModel
 {
@@ -9,7 +10,9 @@ namespace HellsGate.Models.DatabaseModel
     [Owned]
     public class AutorizationLevelModel : BaseModel
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+
         public string AuthName { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ExpirationDate { get; set; }

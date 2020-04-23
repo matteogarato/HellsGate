@@ -6,11 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HellsGate.Models.DatabaseModel
 {
-    public class PeopleAnagraphicModel : IdentityUser<string>
+    public class PeopleAnagraphicModel : IdentityUser<Guid>
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public override string Id { get; set; }
+        public override Guid Id { get; set; }
 
         public string Name { get; set; }
         public string Surname { get; set; }
@@ -22,10 +21,5 @@ namespace HellsGate.Models.DatabaseModel
         public virtual ICollection<CarAnagraphicModel> Cars { get; set; }
         public virtual AutorizationLevelModel AutorizationLevel { get; set; }
         public virtual SafeAuthModel SafeAuthModel { get; set; }
-
-        public PeopleAnagraphicModel()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
     }
 }

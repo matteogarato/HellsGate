@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HellsGate.Api.Migrations
 {
     [DbContext(typeof(HellsGateContext))]
-    [Migration("20200423110014_Dev001")]
-    partial class Dev001
+    [Migration("20200423172950_DEV001")]
+    partial class DEV001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,8 +49,8 @@ namespace HellsGate.Api.Migrations
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PeopleEntered")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("PeopleEntered")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Plate")
                         .HasColumnType("nvarchar(max)");
@@ -83,8 +83,8 @@ namespace HellsGate.Api.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LicencePlate");
 
@@ -191,9 +191,9 @@ namespace HellsGate.Api.Migrations
 
             modelBuilder.Entity("HellsGate.Models.DatabaseModel.PeopleAnagraphicModel", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -316,8 +316,10 @@ namespace HellsGate.Api.Migrations
 
                     b.OwnsOne("HellsGate.Models.DatabaseModel.AutorizationLevelModel", "AutorizationLevel", b1 =>
                         {
-                            b1.Property<string>("PeopleAnagraphicModelId")
-                                .HasColumnType("nvarchar(450)");
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnName("Id")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("AuthName")
                                 .HasColumnType("nvarchar(max)");
@@ -337,17 +339,19 @@ namespace HellsGate.Api.Migrations
                             b1.Property<DateTime>("ExpirationDate")
                                 .HasColumnType("datetime2");
 
-                            b1.Property<int>("Id")
-                                .HasColumnName("Id")
-                                .HasColumnType("int");
-
                             b1.Property<DateTime?>("LastUpdated")
                                 .HasColumnType("datetime2");
 
                             b1.Property<string>("LastUpdatedBy")
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("PeopleAnagraphicModelId");
+                            b1.Property<Guid>("PeopleAnagraphicModelId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PeopleAnagraphicModelId")
+                                .IsUnique();
 
                             b1.ToTable("Autorizations");
 
@@ -357,11 +361,13 @@ namespace HellsGate.Api.Migrations
 
                     b.OwnsOne("HellsGate.Models.DatabaseModel.SafeAuthModel", "SafeAuthModel", b1 =>
                         {
-                            b1.Property<string>("PeopleAnagraphicModelId")
-                                .HasColumnType("nvarchar(450)");
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnName("Id")
+                                .HasColumnType("uniqueidentifier");
 
-                            b1.Property<int>("AutId")
-                                .HasColumnType("int");
+                            b1.Property<Guid>("AutId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Control")
                                 .HasColumnType("nvarchar(max)");
@@ -372,20 +378,22 @@ namespace HellsGate.Api.Migrations
                             b1.Property<string>("CreatedBy")
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<int>("Id")
-                                .HasColumnName("Id")
-                                .HasColumnType("int");
-
                             b1.Property<DateTime?>("LastUpdated")
                                 .HasColumnType("datetime2");
 
                             b1.Property<string>("LastUpdatedBy")
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("UserId")
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<Guid>("PeopleAnagraphicModelId")
+                                .HasColumnType("uniqueidentifier");
 
-                            b1.HasKey("PeopleAnagraphicModelId");
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PeopleAnagraphicModelId")
+                                .IsUnique();
 
                             b1.ToTable("SafeAuthModels");
 

@@ -35,12 +35,12 @@ namespace HellsGate.Services
         public async Task<bool> Access(AccessModel newAccess, WellknownAuthorizationLevel AccessType)
         {
             newAccess.GrantedAccess = false;
-            if (!string.IsNullOrEmpty(newAccess.PeopleEntered) || !string.IsNullOrEmpty(newAccess.Plate) || !string.IsNullOrEmpty(newAccess.CardNumber))
+            if (newAccess.PeopleEntered.Equals(Guid.Empty) || !string.IsNullOrEmpty(newAccess.Plate) || !string.IsNullOrEmpty(newAccess.CardNumber))
             {
                 try
                 {
                     PeopleAnagraphicModel owner = new PeopleAnagraphicModel();
-                    if (string.IsNullOrEmpty(newAccess.PeopleEntered) && !string.IsNullOrEmpty(newAccess.Plate))
+                    if (newAccess.PeopleEntered.Equals(Guid.Empty) && !string.IsNullOrEmpty(newAccess.Plate))
                     {
                         if (await _context.Cars.AnyAsync(c => c.LicencePlate == newAccess.Plate))
                         {
@@ -69,13 +69,13 @@ namespace HellsGate.Services
             return newAccess.GrantedAccess;
         }
 
-        public async Task<string> GetUserByInputAsync(string UserInput)
+        public async Task<Guid> GetUserByInputAsync(string UserInput)
         {
             try
             {
                 var user = new PeopleAnagraphicModel();
                 if (string.IsNullOrEmpty(UserInput) || string.IsNullOrEmpty(UserInput.Trim()))
-                { return string.Empty; }
+                { return Guid.Empty; }
                 string toFind = UserInput.Trim();
 
                 if (toFind.IsValidEmail() && await _context.Peoples.AnyAsync(p => String.Equals(p.Email, UserInput, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false))
@@ -100,10 +100,10 @@ namespace HellsGate.Services
             try
             {
                 var userId = await GetUserByInputAsync(username).ConfigureAwait(false);
-                if (string.IsNullOrEmpty(userId)) { return SignInResult.Failed; }
+                if (userId.Equals(Guid.Empty)) { return SignInResult.Failed; }
                 if (await _context.Peoples.AnyAsync(p => p.Id == userId).ConfigureAwait(false))
                 {
-                    PeopleAnagraphicModel userSelected = await _context.Peoples.FirstOrDefaultAsync(p => p.UserName == userId).ConfigureAwait(false);
+                    PeopleAnagraphicModel userSelected = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == userId).ConfigureAwait(false);
                     if (await _securLib.CompareHashAsync(
                                 Convert.FromBase64String(userSelected.Password)
                                 , await _securLib.EncriptLineAsync(password).ConfigureAwait(false)).ConfigureAwait(false))

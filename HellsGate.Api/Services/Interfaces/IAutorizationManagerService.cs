@@ -1,4 +1,5 @@
 ﻿using HellsGate.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace HellsGate.Services.Interfaces
@@ -7,10 +8,10 @@ namespace HellsGate.Services.Interfaces
     {
         public Task<bool> IsCarAutorized(string p_CarModelId, WellknownAuthorizationLevel p_AuthNeeded);
 
-        public Task<bool> IsAutorized(string p_PeopleModelId, WellknownAuthorizationLevel p_AuthNeeded);
+        public Task<bool> IsAutorized(Guid p_PeopleModelId, WellknownAuthorizationLevel p_AuthNeeded);
 
         public Task CreateAdmin();
 
-        public Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, WellknownAuthorizationLevel p_newAuthorization);
+        public Task AutorizationModify(Guid p_PeopleModelIdRequest, Guid p_PeopleModelId, WellknownAuthorizationLevel p_newAuthorization);
     }
 }

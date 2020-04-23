@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HellsGate.Api.Migrations
 {
-    public partial class Dev001 : Migration
+    public partial class DEV001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,7 +20,7 @@ namespace HellsGate.Api.Migrations
                     AccessTime = table.Column<DateTime>(nullable: false),
                     GrantedAccess = table.Column<bool>(nullable: false),
                     Plate = table.Column<string>(nullable: true),
-                    PeopleEntered = table.Column<string>(nullable: true),
+                    PeopleEntered = table.Column<Guid>(nullable: false),
                     CardNumber = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -117,7 +117,7 @@ namespace HellsGate.Api.Migrations
                 name: "Peoples",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     NormalizedUserName = table.Column<string>(nullable: true),
                     NormalizedEmail = table.Column<string>(nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
@@ -153,20 +153,20 @@ namespace HellsGate.Api.Migrations
                 name: "Autorizations",
                 columns: table => new
                 {
-                    PeopleAnagraphicModelId = table.Column<string>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: true),
                     LastUpdatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
-                    Id = table.Column<int>(nullable: false),
                     AuthName = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     ExpirationDate = table.Column<DateTime>(nullable: false),
-                    AuthValue = table.Column<int>(nullable: false)
+                    AuthValue = table.Column<int>(nullable: false),
+                    PeopleAnagraphicModelId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Autorizations", x => x.PeopleAnagraphicModelId);
+                    table.PrimaryKey("PK_Autorizations", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Autorizations_Peoples_PeopleAnagraphicModelId",
                         column: x => x.PeopleAnagraphicModelId,
@@ -186,7 +186,7 @@ namespace HellsGate.Api.Migrations
                     CreatedBy = table.Column<string>(nullable: true),
                     Model = table.Column<string>(nullable: true),
                     Colour = table.Column<string>(nullable: true),
-                    OwnerId = table.Column<string>(nullable: true)
+                    OwnerId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -203,19 +203,19 @@ namespace HellsGate.Api.Migrations
                 name: "SafeAuthModels",
                 columns: table => new
                 {
-                    PeopleAnagraphicModelId = table.Column<string>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: true),
                     LastUpdatedBy = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
-                    Id = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    AutId = table.Column<int>(nullable: false),
-                    Control = table.Column<string>(nullable: true)
+                    UserId = table.Column<Guid>(nullable: false),
+                    AutId = table.Column<Guid>(nullable: false),
+                    Control = table.Column<string>(nullable: true),
+                    PeopleAnagraphicModelId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SafeAuthModels", x => x.PeopleAnagraphicModelId);
+                    table.PrimaryKey("PK_SafeAuthModels", x => x.Id);
                     table.ForeignKey(
                         name: "FK_SafeAuthModels_Peoples_PeopleAnagraphicModelId",
                         column: x => x.PeopleAnagraphicModelId,
@@ -223,6 +223,12 @@ namespace HellsGate.Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Autorizations_PeopleAnagraphicModelId",
+                table: "Autorizations",
+                column: "PeopleAnagraphicModelId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cars_OwnerId",
@@ -233,6 +239,12 @@ namespace HellsGate.Api.Migrations
                 name: "IX_Peoples_CardNumber1",
                 table: "Peoples",
                 column: "CardNumber1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SafeAuthModels_PeopleAnagraphicModelId",
+                table: "SafeAuthModels",
+                column: "PeopleAnagraphicModelId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

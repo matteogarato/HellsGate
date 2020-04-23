@@ -48,7 +48,7 @@ namespace HellsGate.Services
         /// <param name="p_PeopleModelId"></param>
         /// <param name="p_AuthNeeded"></param>
         /// <returns></returns>
-        public async Task<bool> IsAutorized(string p_PeopleModelId, WellknownAuthorizationLevel p_AuthNeeded)
+        public async Task<bool> IsAutorized(Guid p_PeopleModelId, WellknownAuthorizationLevel p_AuthNeeded)
         {
             try
             {
@@ -72,6 +72,38 @@ namespace HellsGate.Services
             }
         }
 
+        public async Task<Guid> CreateUser(PeopleAnagraphicModel user, AutorizationLevelModel autorizationLevel)
+        {
+            try
+            {
+                if (!user.Id.Equals(Guid.Empty) || !autorizationLevel.Id.Equals(Guid.Empty))
+                {
+                    return Guid.Empty;
+                }
+                user.Id = Guid.NewGuid();
+                autorizationLevel.Id = Guid.NewGuid();
+                _context.Peoples.Add(user);
+                _context.Autorizations.Add(autorizationLevel);
+                var safeAuth = new SafeAuthModel()
+                {
+                    Id = Guid.NewGuid(),
+                    AutId = autorizationLevel.Id,
+                    UserId = user.Id,
+                    Control = await _securLib.EncryptLineToStringAsync($"{user.Id}{autorizationLevel.Id}{autorizationLevel.AuthValue}").ConfigureAwait(false)
+                };
+                _context.SafeAuthModels.Add(safeAuth);
+                user.AutorizationLevel = autorizationLevel;
+                user.SafeAuthModel = safeAuth;
+                _context.SaveChanges();
+                return user.Id;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
+                return Guid.Empty;
+            }
+        }
+
         public async Task CreateAdmin()
         {
             try
@@ -84,23 +116,22 @@ namespace HellsGate.Services
                 };
                 var auth = new AutorizationLevelModel()
                 {
-                    Id = 1,
                     AuthName = "ROOT",
                     AuthValue = WellknownAuthorizationLevel.Root
                 };
-
-                var safeAuth = new SafeAuthModel()
-                {
-                    Id = 1,
-                    AutId = 1,
-                    UserId = usr.Id,
-                    Control = await _securLib.EncryptLineToStringAsync(usr.Id + "1" + WellknownAuthorizationLevel.Root.ToString()).ConfigureAwait(false)
-                };
-                usr.AutorizationLevel = auth;
-                usr.SafeAuthModel = safeAuth;
-                _context.Autorizations.Add(auth);
-                _context.SafeAuthModels.Add(safeAuth);
-                _context.Peoples.Add(usr);
+                await CreateUser(usr, auth);
+                //var safeAuth = new SafeAuthModel()
+                //{
+                //    Id = 1,
+                //    AutId = 1,
+                //    UserId = usr.Id,
+                //    Control = await _securLib.EncryptLineToStringAsync(usr.Id + "1" + WellknownAuthorizationLevel.Root.ToString()).ConfigureAwait(false)
+                //};
+                //usr.AutorizationLevel = auth;
+                //usr.SafeAuthModel = safeAuth;
+                //_context.Autorizations.Add(auth);
+                //_context.SafeAuthModels.Add(safeAuth);
+                //_context.Peoples.Add(usr);
                 var menu = _menuService.CreateMenuFromPages();
                 foreach (var vm in menu)
                 {
@@ -115,7 +146,7 @@ namespace HellsGate.Services
             }
         }
 
-        public async Task AutorizationModify(string p_PeopleModelIdRequest, string p_PeopleModelId, WellknownAuthorizationLevel p_newAuthorization)
+        public async Task AutorizationModify(Guid p_PeopleModelIdRequest, Guid p_PeopleModelId, WellknownAuthorizationLevel p_newAuthorization)
         {
             try
             {
@@ -144,7 +175,7 @@ namespace HellsGate.Services
             }
         }
 
-        private async Task ModifySafeAut(string p_UserId, int p_newAuthorization, WellknownAuthorizationLevel p_NewWellknownAuthorizationLevel)
+        private async Task ModifySafeAut(Guid p_UserId, Guid p_newAuthorization, WellknownAuthorizationLevel p_NewWellknownAuthorizationLevel)
         {
             try
             {
@@ -168,7 +199,7 @@ namespace HellsGate.Services
             }
         }
 
-        private async Task<bool> AuthNotModified(string p_UserId)
+        private async Task<bool> AuthNotModified(Guid p_UserId)
         {
             try
             {

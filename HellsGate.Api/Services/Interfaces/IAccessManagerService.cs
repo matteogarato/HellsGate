@@ -1,6 +1,7 @@
 ﻿using HellsGate.Models;
 using HellsGate.Models.DatabaseModel;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Threading.Tasks;
 
 namespace HellsGate.Services.Interfaces
@@ -11,6 +12,6 @@ namespace HellsGate.Services.Interfaces
 
         public Task<SignInResult> ValidateLoginAsync(string username, string password, bool rememberMe, bool shouldLockout);
 
-        public Task<string> GetUserByInputAsync(string UserInput);
+        public Task<Guid> GetUserByInputAsync(string UserInput);
     }
 }

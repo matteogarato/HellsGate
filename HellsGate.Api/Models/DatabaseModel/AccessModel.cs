@@ -8,7 +8,7 @@ namespace HellsGate.Models.DatabaseModel
         public DateTime AccessTime { get; set; }
         public bool GrantedAccess { get; set; }
         public string Plate { get; set; }
-        public string PeopleEntered { get; set; }
+        public Guid PeopleEntered { get; set; }
         public string CardNumber { get; set; }
     }
 }
