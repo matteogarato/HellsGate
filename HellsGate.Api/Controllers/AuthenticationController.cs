@@ -13,15 +13,13 @@ namespace HellsGate.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAccessManagerService _accessManagerService;
-        private readonly IAutorizationManagerService _autorizationManagerService;
 
-        public AuthenticationController(IAccessManagerService accessManagerService, IAutorizationManagerService autorizationManagerService)
+        public AuthenticationController(IAccessManagerService accessManagerService)
         {
             _accessManagerService = accessManagerService ?? throw new ArgumentNullException(nameof(accessManagerService));
-            _autorizationManagerService = autorizationManagerService ?? throw new ArgumentNullException(nameof(autorizationManagerService));
         }
 
-        [Route("")]
+        [Route("Authenticate")]
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> AuthenticateAsync([FromBody]AuthenticateModel model)
@@ -32,15 +30,6 @@ namespace HellsGate.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             return Ok(user);
-        }
-
-        [Route("CreateAdmin")]
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult CreateAdmin()
-        {
-            _autorizationManagerService.CreateAdmin();
-            return Ok();
         }
     }
 }

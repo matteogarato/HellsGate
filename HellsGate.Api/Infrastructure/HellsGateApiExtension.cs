@@ -1,5 +1,4 @@
 ﻿using HellsGate.Models.Context;
-using HellsGate.Models.DatabaseModel;
 using HellsGate.Services;
 using HellsGate.Services.Interfaces;
 using log4net;
@@ -21,7 +20,6 @@ namespace HellsGate.Infrastructure
             //services.AddDefaultIdentity<PeopleAnagraphicModel>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<HellsGateContext>();
             services.AddScoped<IAccessManagerService, AccessManagerService>();
-            services.AddScoped<IAsyncHelperService, AsyncHelperService>();
             services.AddScoped<IAutorizationManagerService, AutorizationManagerService>();
             services.AddScoped<INodeService, NodeService>();
             //services.AddSingleton<ILoginManagerService, LoginManagerService>();

@@ -8,21 +8,46 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
-    [Authorize]
-    [Route("api/PlateVerification")]
+    //[Authorize]
+    [Route("Authorization")]
     [ApiController]
-    public class PlateVerificationController : ControllerBase
+    public class AuthorizationController : ControllerBase
     {
         private readonly WellknownAuthorizationLevel AccessType = WellknownAuthorizationLevel.User;//TODO: add configuration reading
         private readonly IAccessManagerService _accessManager;
 
-        public PlateVerificationController(IAccessManagerService accessManager)
+        public AuthorizationController(IAccessManagerService accessManager)
         {
             _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
         }
 
-        [HttpGet("{PlateNumber}")]
-        public async Task<IActionResult> GetAsync(string PlateNumber)
+        [Route("Card/{CardId}")]
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> VerifyCardAsync(string CardId)
+        {
+            if (string.IsNullOrWhiteSpace(CardId))
+            {
+                return BadRequest();
+            }
+            var newAccess = new AccessModel
+            {
+                AccessTime = DateTime.Now,
+                GrantedAccess = false,
+                CardNumber = CardId
+            };
+
+            var granted = await _accessManager.Access(newAccess, AccessType);
+            if (!granted)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [Route("Plate/{PlateNumber}")]
+        [HttpGet]
+        public async Task<IActionResult> VerifyPlateAsync(string PlateNumber)
         {
             if (string.IsNullOrWhiteSpace(PlateNumber))
             {

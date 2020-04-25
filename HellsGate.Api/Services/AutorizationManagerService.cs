@@ -55,7 +55,7 @@ namespace HellsGate.Services
                 if (await _context.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
                 {
                     PeopleAnagraphicModel usr = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
-                    if (usr.AutorizationLevel.AuthValue == p_AuthNeeded
+                    if (usr.AutorizationLevel.AuthValue >= p_AuthNeeded
                         && await AuthNotModified(usr.Id).ConfigureAwait(false)
                         && (usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date || usr.AutorizationLevel.AuthValue == WellknownAuthorizationLevel.Root))
                     {
@@ -117,7 +117,8 @@ namespace HellsGate.Services
                 var auth = new AutorizationLevelModel()
                 {
                     AuthName = "ROOT",
-                    AuthValue = WellknownAuthorizationLevel.Root
+                    AuthValue = WellknownAuthorizationLevel.Root,
+                    ExpirationDate = DateTime.Now.AddYears(1)
                 };
                 await CreateUser(usr, auth);
                 //var safeAuth = new SafeAuthModel()
@@ -204,7 +205,7 @@ namespace HellsGate.Services
             try
             {
                 if (await _context.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false)
-                    && await _context.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
+                    && await _context.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))//TODO: owned entity
                 {
                     PeopleAnagraphicModel user = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_UserId).ConfigureAwait(false);
                     SafeAuthModel authSaved = await _context.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);

@@ -64,6 +64,7 @@ namespace HellsGate.Services
                 catch (Exception ex)
                 {
                     StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Card verification", MethodBase.GetCurrentMethod(), ex);
+                    return false;
                 }
             }
             return newAccess.GrantedAccess;

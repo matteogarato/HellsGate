@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace HellsGate.Models.DatabaseModel
+﻿namespace HellsGate.Models.DatabaseModel
 {
     public class NodeCreateModel : BaseModel
     {

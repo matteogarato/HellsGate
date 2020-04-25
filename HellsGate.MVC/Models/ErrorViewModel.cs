@@ -1,5 +1,3 @@
-using System;
-
 namespace HellsGate.MVC.Models
 {
     public class ErrorViewModel
