@@ -107,7 +107,7 @@ namespace HellsGate.Services
             {
                 var savenode = JToken.FromObject(node).ToObject<NodeModel>();
                 savenode.Id = Guid.NewGuid();
-                savenode.CreatedAt = DateTime.Now;
+                savenode.CreatedAt = DateTime.UtcNow;
                 _context.Nodes.Add(savenode);
                 _context.SaveChanges();
                 return savenode.Id;

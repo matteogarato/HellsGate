@@ -32,7 +32,7 @@ namespace HellsGate.Controllers
             }
             var newAccess = new AccessModel
             {
-                AccessTime = DateTime.Now,
+                AccessTime = DateTime.UtcNow,
                 GrantedAccess = false,
                 CardNumber = CardId
             };
@@ -55,7 +55,7 @@ namespace HellsGate.Controllers
             }
             var newAccess = new AccessModel
             {
-                AccessTime = DateTime.Now,
+                AccessTime = DateTime.UtcNow,
                 GrantedAccess = false,
                 Plate = PlateNumber
             };

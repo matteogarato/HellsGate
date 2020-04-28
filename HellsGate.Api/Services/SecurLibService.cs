@@ -1,36 +1,80 @@
-﻿using HellsGate.Services.Interfaces;
+﻿using HellsGate.Models.DatabaseModel;
+using HellsGate.Services.Interfaces;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HellsGate.Services
 {
     public class SecurLibService : ISecurLibService
     {
-        public Task<byte[]> EncriptLineAsync(string p_textToEncrypt)
-        {
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
-            var salted = new Rfc2898DeriveBytes(p_textToEncrypt, salt, 1000);
-            byte[] hash = salted.GetBytes(20);
-            byte[] hashBytes = new byte[36];
-            Array.Copy(salt, 0, hashBytes, 0, 16);
-            Array.Copy(hash, 0, hashBytes, 16, 20);
-            return Task.FromResult(hashBytes);
-        }
+        private static int IterationCount = 10000;
 
-        public Task<bool> CompareHashAsync(byte[] hashBase, byte[] hashToVerify)
+        public string EncriptLine(string p_textToEncrypt)
         {
-            for (int i = 16; i < 20; i++)
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
             {
-                if (hashBase[i] != hashToVerify[i])
-                {
-                    return Task.FromResult(false);
-                }
+                rng.GetBytes(salt);
             }
-            return Task.FromResult(true);
+
+            var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+               password: p_textToEncrypt,
+               salt: salt,
+               prf: KeyDerivationPrf.HMACSHA512,
+               iterationCount: IterationCount,
+               numBytesRequested: 256 / 8));
+            return $"{Convert.ToBase64String(salt)}.{hashed}";
         }
 
-        public async Task<string> EncryptLineToStringAsync(string p_textToEncrypt) => Convert.ToBase64String(await EncriptLineAsync(p_textToEncrypt).ConfigureAwait(false));
+        public bool CompareHash(string hash, string toVerify)
+        {
+            var parts = hash.Split('.', 2);
+
+            if (parts.Length != 2)
+            {
+                throw new FormatException("Unexpected hash format");
+            }
+
+            var salt = Convert.FromBase64String(parts[0]);
+            var oldHashed = parts[1];
+            var newHashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: toVerify,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA512,
+                iterationCount: IterationCount,
+                numBytesRequested: 256 / 8));
+
+            return oldHashed == newHashed;
+        }
+
+        public string EncryptEntityRelation(PeopleAnagraphicModel p_UserModel, AutorizationLevelModel p_AuthModel)
+        {
+            var md5Anagraphic = CreateMD5($"{p_UserModel.Name}{p_UserModel.Email}{p_UserModel.CardNumber?.CardNumber}{p_UserModel.AutorizationLevel.AuthValue}{p_UserModel.AutorizationLevel.Id}");
+            var md5Autorization = CreateMD5($"{p_AuthModel.AuthValue}{p_AuthModel.AuthName}{p_AuthModel.Id}");
+            var encripted = $"{md5Anagraphic}{md5Autorization}";
+            return encripted;
+        }
+
+        private static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
     }
 }

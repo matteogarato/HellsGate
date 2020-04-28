@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using HellsGate.Models.DatabaseModel;
+using System.Threading.Tasks;
 
 namespace HellsGate.Services.Interfaces
 {
     public interface ISecurLibService
     {
-        public Task<byte[]> EncriptLineAsync(string p_textToEncrypt);
+        public string EncriptLine(string p_textToEncrypt);
 
-        public Task<bool> CompareHashAsync(byte[] hashBase, byte[] hashToVerify);
+        public bool CompareHash(string hash, string toVerify);
 
-        public Task<string> EncryptLineToStringAsync(string p_textToEncrypt);
+        public string EncryptEntityRelation(PeopleAnagraphicModel p_UserModel, AutorizationLevelModel p_AuthModel);
     }
 }

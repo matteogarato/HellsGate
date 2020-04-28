@@ -11,3 +11,5 @@
 5. integration test
 
 8. Node Class for node management
+
+9. Add MD5 to verify no modification are done to the User/authentication

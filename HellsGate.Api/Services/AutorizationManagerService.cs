@@ -15,11 +15,11 @@ namespace HellsGate.Services
         private readonly IMenuService _menuService;
         private readonly HellsGateContext _context;
 
-        public AutorizationManagerService(ISecurLibService securLib, IMenuService menuService, HellsGateContext context)
+        public AutorizationManagerService(ISecurLibService p_securLib, IMenuService p_menuService, HellsGateContext p_context)
         {
-            _securLib = securLib ?? throw new ArgumentNullException(nameof(securLib));
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService));
+            _securLib = p_securLib ?? throw new ArgumentNullException(nameof(p_securLib));
+            _context = p_context ?? throw new ArgumentNullException(nameof(p_context));
+            _menuService = p_menuService ?? throw new ArgumentNullException(nameof(p_menuService));
         }
 
         /// <summary>
@@ -72,30 +72,36 @@ namespace HellsGate.Services
             }
         }
 
-        public async Task<Guid> CreateUser(PeopleAnagraphicModel user, AutorizationLevelModel autorizationLevel)
+        /// <summary>
+        /// </summary>
+        /// <param name="p_user"></param>
+        /// <param name="p_autorizationLevel"></param>
+        /// <returns></returns>
+        public Guid CreateUser(PeopleAnagraphicModel p_user, AutorizationLevelModel p_autorizationLevel)
         {
             try
             {
-                if (!user.Id.Equals(Guid.Empty) || !autorizationLevel.Id.Equals(Guid.Empty))
+                if (!p_user.Id.Equals(Guid.Empty) || !p_autorizationLevel.Id.Equals(Guid.Empty))
                 {
                     return Guid.Empty;
                 }
-                user.Id = Guid.NewGuid();
-                autorizationLevel.Id = Guid.NewGuid();
-                _context.Peoples.Add(user);
-                _context.Autorizations.Add(autorizationLevel);
+                p_user.Id = Guid.NewGuid();
+                p_autorizationLevel.Id = Guid.NewGuid();
+                _context.Peoples.Add(p_user);
+                _context.Autorizations.Add(p_autorizationLevel);
+                p_user.AutorizationLevel = p_autorizationLevel;
                 var safeAuth = new SafeAuthModel()
                 {
                     Id = Guid.NewGuid(),
-                    AutId = autorizationLevel.Id,
-                    UserId = user.Id,
-                    Control = await _securLib.EncryptLineToStringAsync($"{user.Id}{autorizationLevel.Id}{autorizationLevel.AuthValue}").ConfigureAwait(false)
+                    AutId = p_autorizationLevel.Id,
+                    UserId = p_user.Id,
+                    Control = _securLib.EncriptLine(_securLib.EncryptEntityRelation(p_user, p_autorizationLevel))
                 };
                 _context.SafeAuthModels.Add(safeAuth);
-                user.AutorizationLevel = autorizationLevel;
-                user.SafeAuthModel = safeAuth;
+                p_user.AutorizationLevel = p_autorizationLevel;
+                p_user.SafeAuthModel = safeAuth;
                 _context.SaveChanges();
-                return user.Id;
+                return p_user.Id;
             }
             catch (Exception ex)
             {
@@ -104,35 +110,117 @@ namespace HellsGate.Services
             }
         }
 
-        public async Task CreateAdmin()
+        public async Task<bool> ChangeCardNumber(Guid p_PeopleModelId, string p_CardNumber)
+        {
+            if (p_PeopleModelId.Equals(Guid.Empty))
+            {
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(p_CardNumber))
+            {
+                return false;
+            }
+            try
+            {
+                if (!await _context.CardModels.AnyAsync(c => c.CardNumber == p_CardNumber).ConfigureAwait(false))
+                {
+                    return false;
+                }
+                if (await _context.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
+                {
+                    return false;
+                }
+                var usr = await _context.Peoples.FirstAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                usr.CardNumber = await _context.CardModels.FirstAsync(c => c.CardNumber == p_CardNumber).ConfigureAwait(false);
+                await ModifySafeAut(p_PeopleModelId, usr.AutorizationLevel.Id, usr.AutorizationLevel.AuthValue);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> CreateCard(CardModel p_model)
+        {
+            if (p_model == null)
+            {
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(p_model.CardNumber))
+            {
+                return false;
+            }
+            try
+            {
+                if (await _context.CardModels.AnyAsync(c => c.CardNumber == p_model.CardNumber).ConfigureAwait(false))
+                {
+                    return false;
+                }
+                await _context.CardModels.AddAsync(p_model).ConfigureAwait(false);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateCardExpirationDate(string p_CardNumber, DateTime p_newExpirationDate)
+        {
+            if (string.IsNullOrWhiteSpace(p_CardNumber))
+            {
+                return false;
+            }
+            try
+            {
+                if (!await _context.CardModels.AnyAsync(c => c.CardNumber == p_CardNumber).ConfigureAwait(false))
+                {
+                    return false;
+                }
+                var card = await _context.CardModels.FirstAsync(c => c.CardNumber == p_CardNumber).ConfigureAwait(false);
+                card.ExpirationDate = p_newExpirationDate;
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during IsAutorized od people", MethodBase.GetCurrentMethod(), ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        public void CreateAdmin()
         {
             try
             {
-                PeopleAnagraphicModel usr = new PeopleAnagraphicModel()
+                var card = new CardModel()
+                {
+                    CardNumber = "123456",
+                    ExpirationDate = DateTime.UtcNow.AddYears(1),
+                    CreatedAt = DateTime.UtcNow
+                };
+                var usr = new PeopleAnagraphicModel()
                 {
                     UserName = "Admin",
                     Email = "Admin@admin.com",
-                    Password = Convert.ToBase64String(await _securLib.EncriptLineAsync("Admin").ConfigureAwait(false)),
+                    Password = _securLib.EncriptLine("Admin"),
+                    CardNumber = card
                 };
                 var auth = new AutorizationLevelModel()
                 {
                     AuthName = "ROOT",
                     AuthValue = WellknownAuthorizationLevel.Root,
-                    ExpirationDate = DateTime.Now.AddYears(1)
+                    ExpirationDate = DateTime.UtcNow.AddYears(1)
                 };
-                await CreateUser(usr, auth);
-                //var safeAuth = new SafeAuthModel()
-                //{
-                //    Id = 1,
-                //    AutId = 1,
-                //    UserId = usr.Id,
-                //    Control = await _securLib.EncryptLineToStringAsync(usr.Id + "1" + WellknownAuthorizationLevel.Root.ToString()).ConfigureAwait(false)
-                //};
-                //usr.AutorizationLevel = auth;
-                //usr.SafeAuthModel = safeAuth;
-                //_context.Autorizations.Add(auth);
-                //_context.SafeAuthModels.Add(safeAuth);
-                //_context.Peoples.Add(usr);
+                CreateUser(usr, auth);
                 var menu = _menuService.CreateMenuFromPages();
                 foreach (var vm in menu)
                 {
@@ -147,11 +235,17 @@ namespace HellsGate.Services
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="p_PeopleModelIdRequest"></param>
+        /// <param name="p_PeopleModelId"></param>
+        /// <param name="p_newAuthorization"></param>
+        /// <returns></returns>
         public async Task AutorizationModify(Guid p_PeopleModelIdRequest, Guid p_PeopleModelId, WellknownAuthorizationLevel p_newAuthorization)
         {
             try
             {
-                PeopleAnagraphicModel Usr = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                var Usr = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
                 //in case of lowering the authorization i can do only if i'm not the only one with it, and only if thiere is at least one root
                 if (p_newAuthorization < Usr.AutorizationLevel.AuthValue && await _context.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == Usr.AutorizationLevel.AuthValue && p.Id != Usr.Id).ConfigureAwait(false) &&
                     await _context.Peoples.AnyAsync(p => p.AutorizationLevel.AuthValue == WellknownAuthorizationLevel.Root && p.Id != Usr.Id).ConfigureAwait(false))
@@ -161,7 +255,7 @@ namespace HellsGate.Services
                 }
                 else if (p_newAuthorization > Usr.AutorizationLevel.AuthValue)
                 {
-                    PeopleAnagraphicModel UsrRequest = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelIdRequest).ConfigureAwait(false);
+                    var UsrRequest = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelIdRequest).ConfigureAwait(false);
                     if (Usr.AutorizationLevel.AuthValue == WellknownAuthorizationLevel.Root)
                     {
                         Usr.AutorizationLevel.AuthValue = p_newAuthorization;
@@ -176,23 +270,31 @@ namespace HellsGate.Services
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="p_UserId"></param>
+        /// <param name="p_newAuthorization"></param>
+        /// <param name="p_NewWellknownAuthorizationLevel"></param>
+        /// <returns></returns>
         private async Task ModifySafeAut(Guid p_UserId, Guid p_newAuthorization, WellknownAuthorizationLevel p_NewWellknownAuthorizationLevel)
         {
             try
             {
-                var authSaved = new SafeAuthModel();
-                if (await _context.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))
+                if (await _context.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false))
                 {
-                    authSaved = await _context.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
+                    if (await AuthNotModified(p_UserId).ConfigureAwait(false))
+                    {
+                        return;
+                    }
+                    var user = await _context.Peoples.FirstAsync(p => p.Id == p_UserId).ConfigureAwait(false);
+                    if (user.SafeAuthModel == null)
+                    {
+                        return;
+                    }
+                    user.SafeAuthModel.AutId = p_newAuthorization;
+                    user.SafeAuthModel.Control = _securLib.EncriptLine(_securLib.EncryptEntityRelation(user, user.AutorizationLevel));
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
                 }
-                else
-                {
-                    _context.SafeAuthModels.Add(authSaved);
-                }
-                authSaved.AutId = p_newAuthorization;
-                authSaved.Control = await _securLib.EncryptLineToStringAsync(p_UserId.ToString() + p_newAuthorization.ToString() + p_NewWellknownAuthorizationLevel.ToString()).ConfigureAwait(false);
-
-                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -200,22 +302,22 @@ namespace HellsGate.Services
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="p_UserId"></param>
+        /// <returns></returns>
         private async Task<bool> AuthNotModified(Guid p_UserId)
         {
             try
             {
-                if (await _context.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false)
-                    && await _context.SafeAuthModels.AnyAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false))//TODO: owned entity
+                if (await _context.Peoples.AnyAsync(p => p.Id == p_UserId).ConfigureAwait(false))
                 {
-                    PeopleAnagraphicModel user = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_UserId).ConfigureAwait(false);
-                    SafeAuthModel authSaved = await _context.SafeAuthModels.FirstOrDefaultAsync(sa => sa.UserId == p_UserId).ConfigureAwait(false);
-                    if (authSaved != null)
+                    var user = await _context.Peoples.Include(Auth => Auth.AutorizationLevel).Include(Card => Card.CardNumber).FirstAsync(p => p.Id == p_UserId).ConfigureAwait(false);
+                    if (user.SafeAuthModel == null)
                     {
-                        return
-                            await _securLib.CompareHashAsync(
-                                Convert.FromBase64String(authSaved.Control)
-                                , await _securLib.EncriptLineAsync(user.Id.ToString() + user.AutorizationLevel.Id.ToString() + user.AutorizationLevel.AuthValue.ToString()).ConfigureAwait(false)).ConfigureAwait(false);
+                        return false;
                     }
+                    return _securLib.CompareHash(user.SafeAuthModel.Control, _securLib.EncryptEntityRelation(user, user.AutorizationLevel));
                 }
                 return false;
             }

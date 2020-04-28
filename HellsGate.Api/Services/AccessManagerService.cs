@@ -59,7 +59,7 @@ namespace HellsGate.Services
                     }
                     await _context.Access.AddAsync(newAccess).ConfigureAwait(false);
                     await _context.SaveChangesAsync().ConfigureAwait(false);
-                    //StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.Now));
+                    //StaticEventHandler.SendMail(new MailEventArgs(ResourceString.AccessCarMailSubject, ResourceString.AccessCarMailBody, DateTime.UtcNow));
                 }
                 catch (Exception ex)
                 {
@@ -104,10 +104,8 @@ namespace HellsGate.Services
                 if (userId.Equals(Guid.Empty)) { return SignInResult.Failed; }
                 if (await _context.Peoples.AnyAsync(p => p.Id == userId).ConfigureAwait(false))
                 {
-                    PeopleAnagraphicModel userSelected = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == userId).ConfigureAwait(false);
-                    if (await _securLib.CompareHashAsync(
-                                Convert.FromBase64String(userSelected.Password)
-                                , await _securLib.EncriptLineAsync(password).ConfigureAwait(false)).ConfigureAwait(false))
+                    PeopleAnagraphicModel userSelected = await _context.Peoples.Include(Auth => Auth.AutorizationLevel).Include(Card => Card.CardNumber).FirstOrDefaultAsync(p => p.Id == userId).ConfigureAwait(false);
+                    if (_securLib.CompareHash(userSelected.Password, _securLib.EncriptLine(password)))
                     {
                         // authentication successful so generate jwt token
                         var tokenHandler = new JwtSecurityTokenHandler();

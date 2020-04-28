@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HellsGate.Api.Migrations
 {
     [DbContext(typeof(HellsGateContext))]
-    [Migration("20200423172950_DEV001")]
+    [Migration("20200426130922_DEV001")]
     partial class DEV001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
