@@ -5,6 +5,39 @@ namespace HellsGate.Api.Migrations
 {
     public partial class DEV001 : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Access");
+
+            migrationBuilder.DropTable(
+                name: "Autorizations");
+
+            migrationBuilder.DropTable(
+                name: "Cars");
+
+            migrationBuilder.DropTable(
+                name: "IdentityUserClaim<string>");
+
+            migrationBuilder.DropTable(
+                name: "IdentityUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "MainMenu");
+
+            migrationBuilder.DropTable(
+                name: "Nodes");
+
+            migrationBuilder.DropTable(
+                name: "SafeAuthModels");
+
+            migrationBuilder.DropTable(
+                name: "Peoples");
+
+            migrationBuilder.DropTable(
+                name: "CardModels");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -245,39 +278,6 @@ namespace HellsGate.Api.Migrations
                 table: "SafeAuthModels",
                 column: "PeopleAnagraphicModelId",
                 unique: true);
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Access");
-
-            migrationBuilder.DropTable(
-                name: "Autorizations");
-
-            migrationBuilder.DropTable(
-                name: "Cars");
-
-            migrationBuilder.DropTable(
-                name: "IdentityUserClaim<string>");
-
-            migrationBuilder.DropTable(
-                name: "IdentityUserClaims");
-
-            migrationBuilder.DropTable(
-                name: "MainMenu");
-
-            migrationBuilder.DropTable(
-                name: "Nodes");
-
-            migrationBuilder.DropTable(
-                name: "SafeAuthModels");
-
-            migrationBuilder.DropTable(
-                name: "Peoples");
-
-            migrationBuilder.DropTable(
-                name: "CardModels");
         }
     }
 }

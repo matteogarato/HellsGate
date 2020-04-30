@@ -4,7 +4,29 @@ namespace HellsGate
 {
     public class Locator
     {
+        private CustomLogManagerService _customLogManager;
         private MailSenderManagerService _mailSenderManager;
+
+        public Locator()
+        {
+            Init();
+        }
+
+        internal CustomLogManagerService CustomLogManager
+        {
+            get
+            {
+                if (_customLogManager == null)
+                {
+                    _customLogManager = new CustomLogManagerService();
+                }
+                return _customLogManager;
+            }
+            private set
+            {
+                _customLogManager = value;
+            }
+        }
 
         internal MailSenderManagerService MailSenderManager
         {
@@ -26,29 +48,6 @@ namespace HellsGate
         {
             MailSenderManager = new MailSenderManagerService();
             CustomLogManager = new CustomLogManagerService();
-        }
-
-        private CustomLogManagerService _customLogManager;
-
-        internal CustomLogManagerService CustomLogManager
-        {
-            get
-            {
-                if (_customLogManager == null)
-                {
-                    _customLogManager = new CustomLogManagerService();
-                }
-                return _customLogManager;
-            }
-            private set
-            {
-                _customLogManager = value;
-            }
-        }
-
-        public Locator()
-        {
-            Init();
         }
     }
 }

@@ -18,23 +18,6 @@ namespace HellsGate.Controllers
             _nodeService = nodeService ?? throw new ArgumentNullException(nameof(nodeService));
         }
 
-        [Route("{Id}")]
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> GetAsync(Guid Id)
-        {
-            if (Id.Equals(Guid.Empty))
-            {
-                return BadRequest();
-            }
-            var node = await _nodeService.GetByIdAsync(Id);
-            if (node == null)
-            {
-                return NotFound();
-            }
-            return Ok(node);
-        }
-
         [Route("")]
         [AllowAnonymous]
         [HttpPost]
@@ -54,23 +37,6 @@ namespace HellsGate.Controllers
 
         [Route("")]
         [AllowAnonymous]
-        [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] NodeUpdateModel model)
-        {
-            if (model == null || model.Id.Equals(Guid.Empty))
-            {
-                return BadRequest();
-            }
-            var res = await _nodeService.UpdateAsync(model);
-            if (!res)
-            {
-                return NotFound();
-            }
-            return Ok();
-        }
-
-        [Route("")]
-        [AllowAnonymous]
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(Guid Id)
         {
@@ -79,6 +45,40 @@ namespace HellsGate.Controllers
                 return BadRequest();
             }
             var res = await _nodeService.DeleteAsync(Id);
+            if (!res)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
+        [Route("{Id}")]
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetAsync(Guid Id)
+        {
+            if (Id.Equals(Guid.Empty))
+            {
+                return BadRequest();
+            }
+            var node = await _nodeService.GetByIdAsync(Id);
+            if (node == null)
+            {
+                return NotFound();
+            }
+            return Ok(node);
+        }
+
+        [Route("")]
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync([FromBody] NodeUpdateModel model)
+        {
+            if (model == null || model.Id.Equals(Guid.Empty))
+            {
+                return BadRequest();
+            }
+            var res = await _nodeService.UpdateAsync(model);
             if (!res)
             {
                 return NotFound();

@@ -18,6 +18,39 @@ namespace HellsGate.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public List<MainMenuModel> CreateMenuFromPages()
+        {
+            var menu = new List<MainMenuModel>();
+            foreach (var page in GetTypesInNamespace(Assembly.GetExecutingAssembly(), "HellsGate.Pages.Areas"))
+            {
+                menu.Add(new MainMenuModel()
+                {
+                    Text = page.Name
+                }); ;
+            }
+            return menu;
+        }
+
+        public List<MainMenuModel> GetMenuForAuthorization(string p_Auth)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(p_Auth))
+                {
+                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "p_Auth is null or empty", MethodBase.GetCurrentMethod());
+                    return null;
+                }
+                var authlevel = (WellknownAuthorizationLevel)Convert.ToInt32(p_Auth);
+
+                return _context.MainMenu.Where(c => c.AuthLevel == authlevel).ToList();
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during GetMenuForUser", MethodBase.GetCurrentMethod(), ex);
+                return null;
+            }
+        }
+
         public List<MainMenuModel> GetMenuForUser(string p_UserName)
         {
             try
@@ -41,39 +74,6 @@ namespace HellsGate.Services
                 StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during GetMenuForUser", MethodBase.GetCurrentMethod(), ex);
                 return null;
             }
-        }
-
-        public List<MainMenuModel> GetMenuForAuthorization(string p_Auth)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(p_Auth))
-                {
-                    StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "p_Auth is null or empty", MethodBase.GetCurrentMethod());
-                    return null;
-                }
-                var authlevel = (WellknownAuthorizationLevel)Convert.ToInt32(p_Auth);
-
-                return _context.MainMenu.Where(c => c.AuthLevel == authlevel).ToList();
-            }
-            catch (Exception ex)
-            {
-                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during GetMenuForUser", MethodBase.GetCurrentMethod(), ex);
-                return null;
-            }
-        }
-
-        public List<MainMenuModel> CreateMenuFromPages()
-        {
-            var menu = new List<MainMenuModel>();
-            foreach (var page in GetTypesInNamespace(Assembly.GetExecutingAssembly(), "HellsGate.Pages.Areas"))
-            {
-                menu.Add(new MainMenuModel()
-                {
-                    Text = page.Name
-                }); ;
-            }
-            return menu;
         }
 
         private Type[] GetTypesInNamespace(Assembly assembly, string nameSpace)

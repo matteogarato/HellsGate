@@ -1,4 +1,6 @@
-﻿using HellsGate.Models.DatabaseModel;
+﻿using HellsGate.Api.Models.Create;
+using HellsGate.Models;
+using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,30 @@ namespace HellsGate.Controllers
             _autorizationManagerService = autorizationManagerService ?? throw new ArgumentNullException(nameof(autorizationManagerService));
         }
 
+        [Route("/ChangeCardNumber")]
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ChangeCardNumber([FromQuery] Guid userId, [FromQuery] string cardNumber)
+        {
+            try
+            {
+                if (userId.Equals(Guid.Empty))
+                {
+                    return BadRequest();
+                }
+                if (string.IsNullOrWhiteSpace(cardNumber))
+                {
+                    return BadRequest();
+                }
+                _autorizationManagerService.ChangeCardNumber(userId, cardNumber);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [Route("CreateAdmin")]
         [AllowAnonymous]
         [HttpPost]
@@ -24,30 +50,6 @@ namespace HellsGate.Controllers
         {
             _autorizationManagerService.CreateAdmin();
             return Ok();
-        }
-
-        [Route("")]
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult CreateUser([FromBody] PeopleAnagraphicModel user, [FromBody] AutorizationLevelModel autorizationLevel)
-        {
-            try
-            {
-                if (user == null)
-                {
-                    return BadRequest();
-                }
-                if (autorizationLevel == null)
-                {
-                    return BadRequest();
-                }
-                _autorizationManagerService.CreateUser(user, autorizationLevel);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
         }
 
         [Route("Card")]
@@ -70,18 +72,29 @@ namespace HellsGate.Controllers
             }
         }
 
-        [Route("Card")]
+        [Route("")]
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult CreateCard([FromBody]string cardNumber, [FromBody] DateTime newExpirationDate)
+        public IActionResult CreateUser([FromBody]CreateUserModel createModel)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(cardNumber))
+                if (createModel == null)
                 {
                     return BadRequest();
                 }
-                _autorizationManagerService.UpdateCardExpirationDate(cardNumber, newExpirationDate);
+                var usr = new PeopleAnagraphicModel()
+                {
+                    Email = createModel.Email,
+                    Name = createModel.Name,
+                    Surname = createModel.Surname
+                };
+                var auth = new AutorizationLevelModel()
+                {
+                    AuthName = createModel.AuthName,
+                    AuthValue = (WellknownAuthorizationLevel)createModel.AuthValue
+                };
+                _autorizationManagerService.CreateUser(usr, auth);
                 return Ok();
             }
             catch (Exception ex)
@@ -90,22 +103,18 @@ namespace HellsGate.Controllers
             }
         }
 
-        [Route("{userId}/ChangeCardNumber")]
+        [Route("Card")]
         [AllowAnonymous]
-        [HttpPost]
-        public IActionResult CreateCard([FromQuery] Guid userId, [FromQuery] string cardNumber)
+        [HttpPut]
+        public IActionResult UpdateCard([FromQuery]string cardNumber, [FromQuery] DateTime newExpirationDate)
         {
             try
             {
-                if (userId.Equals(Guid.Empty))
-                {
-                    return BadRequest();
-                }
                 if (string.IsNullOrWhiteSpace(cardNumber))
                 {
                     return BadRequest();
                 }
-                _autorizationManagerService.ChangeCardNumber(userId, cardNumber);
+                _autorizationManagerService.UpdateCardExpirationDate(cardNumber, newExpirationDate);
                 return Ok();
             }
             catch (Exception ex)

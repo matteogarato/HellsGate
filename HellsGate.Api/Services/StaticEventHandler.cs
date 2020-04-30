@@ -7,8 +7,8 @@ namespace HellsGate.Services
 {
     public static class StaticEventHandler
     {
-        public static EventHandler<MailEventArgs> SendMailEvent;
         public static EventHandler<LogEventArgs> LogEvent;
+        public static EventHandler<MailEventArgs> SendMailEvent;
 
         public static void Log(TraceLevel p_Trace, string p_Message, MethodBase p_Method, Exception p_Ex = null)
         {

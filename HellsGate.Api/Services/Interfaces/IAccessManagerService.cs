@@ -10,8 +10,8 @@ namespace HellsGate.Services.Interfaces
     {
         public Task<bool> Access(AccessModel newAccess, WellknownAuthorizationLevel AccessType);
 
-        public Task<SignInResult> ValidateLoginAsync(string username, string password, bool rememberMe, bool shouldLockout);
-
         public Task<Guid> GetUserByInputAsync(string UserInput);
+
+        public Task<SignInResult> ValidateLoginAsync(string username, string password, bool rememberMe, bool shouldLockout);
     }
 }

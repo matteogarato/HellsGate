@@ -7,14 +7,14 @@ namespace HellsGate.Services.Interfaces
 {
     public interface INodeService
     {
+        public Guid Create(NodeCreateModel node);
+
+        public Task<bool> DeleteAsync(Guid nodeId);
+
         public Task<List<NodeReadModel>> GetAllAsync();
 
         public Task<NodeReadModel> GetByIdAsync(Guid nodeId);
 
         public Task<bool> UpdateAsync(NodeUpdateModel node);
-
-        public Task<bool> DeleteAsync(Guid nodeId);
-
-        public Guid Create(NodeCreateModel node);
     }
 }

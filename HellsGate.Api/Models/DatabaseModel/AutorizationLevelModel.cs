@@ -10,12 +10,15 @@ namespace HellsGate.Models.DatabaseModel
     [Owned]
     public class AutorizationLevelModel : BaseModel
     {
+        public string AuthName { get; set; }
+
+        public WellknownAuthorizationLevel AuthValue { get; set; }
+
+        public DateTime CreationDate { get; set; }
+
+        public DateTime ExpirationDate { get; set; }
+
         [Key]
         public Guid Id { get; set; }
-
-        public string AuthName { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime ExpirationDate { get; set; }
-        public WellknownAuthorizationLevel AuthValue { get; set; }
     }
 }

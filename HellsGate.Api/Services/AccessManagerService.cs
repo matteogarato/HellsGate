@@ -19,9 +19,9 @@ namespace HellsGate.Services
     public class AccessManagerService : IAccessManagerService
     {
         private readonly IAutorizationManagerService _autorizationManagerService;
-        private readonly ISecurLibService _securLib;
         private readonly IConfiguration _configuration;
         private readonly HellsGateContext _context;
+        private readonly ISecurLibService _securLib;
 
         public AccessManagerService(ISecurLibService securLib,
             IConfiguration configuration, IAutorizationManagerService autorizationManagerService, HellsGateContext context)
@@ -105,7 +105,8 @@ namespace HellsGate.Services
                 if (await _context.Peoples.AnyAsync(p => p.Id == userId).ConfigureAwait(false))
                 {
                     PeopleAnagraphicModel userSelected = await _context.Peoples.Include(Auth => Auth.AutorizationLevel).Include(Card => Card.CardNumber).FirstOrDefaultAsync(p => p.Id == userId).ConfigureAwait(false);
-                    if (_securLib.CompareHash(userSelected.Password, _securLib.EncriptLine(password)))
+                    var encrypted = await _securLib.EncriptLine(password);
+                    if (await _securLib.CompareHash(userSelected.Password, encrypted))
                     {
                         // authentication successful so generate jwt token
                         var tokenHandler = new JwtSecurityTokenHandler();

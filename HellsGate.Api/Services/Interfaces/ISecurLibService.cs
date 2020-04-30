@@ -5,10 +5,10 @@ namespace HellsGate.Services.Interfaces
 {
     public interface ISecurLibService
     {
-        public string EncriptLine(string p_textToEncrypt);
+        public Task<bool> CompareHash(string hash, string toVerify);
 
-        public bool CompareHash(string hash, string toVerify);
+        public Task<string> EncriptLine(string p_textToEncrypt);
 
-        public string EncryptEntityRelation(PeopleAnagraphicModel p_UserModel, AutorizationLevelModel p_AuthModel);
+        public Task<string> EncryptEntityRelation(PeopleAnagraphicModel p_UserModel, AutorizationLevelModel p_AuthModel);
     }
 }

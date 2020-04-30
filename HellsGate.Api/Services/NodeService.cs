@@ -20,6 +20,24 @@ namespace HellsGate.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public Guid Create(NodeCreateModel node)
+        {
+            try
+            {
+                var savenode = JToken.FromObject(node).ToObject<NodeModel>();
+                savenode.Id = Guid.NewGuid();
+                savenode.CreatedAt = DateTime.UtcNow;
+                _context.Nodes.Add(savenode);
+                _context.SaveChanges();
+                return savenode.Id;
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Update", MethodBase.GetCurrentMethod(), ex);
+                return Guid.Empty;
+            }
+        }
+
         public async Task<bool> DeleteAsync(Guid nodeId)
         {
             try
@@ -98,24 +116,6 @@ namespace HellsGate.Services
             {
                 StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Update", MethodBase.GetCurrentMethod(), ex);
                 return false;
-            }
-        }
-
-        public Guid Create(NodeCreateModel node)
-        {
-            try
-            {
-                var savenode = JToken.FromObject(node).ToObject<NodeModel>();
-                savenode.Id = Guid.NewGuid();
-                savenode.CreatedAt = DateTime.UtcNow;
-                _context.Nodes.Add(savenode);
-                _context.SaveChanges();
-                return savenode.Id;
-            }
-            catch (Exception ex)
-            {
-                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Update", MethodBase.GetCurrentMethod(), ex);
-                return Guid.Empty;
             }
         }
     }

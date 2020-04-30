@@ -4,11 +4,12 @@ namespace HellsGate.Models.DatabaseModel
 {
     public class CarAnagraphicModel : BaseModel
     {
+        public string Colour { get; set; }
+
         [Key]
         public string LicencePlate { get; set; }
 
         public string Model { get; set; }
-        public string Colour { get; set; }
         public virtual PeopleAnagraphicModel Owner { get; set; }
     }
 }

@@ -17,15 +17,13 @@ namespace HellsGate.Models.Context
 
         public DbSet<AccessModel> Access { get; set; }
         public DbSet<AutorizationLevelModel> Autorizations { get; set; }
-        public DbSet<SafeAuthModel> SafeAuthModels { get; set; }
-        public DbSet<CarAnagraphicModel> Cars { get; set; }
-        public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
-        public DbSet<MainMenuModel> MainMenu { get; set; }
         public DbSet<CardModel> CardModels { get; set; }
-
-        public DbSet<NodeModel> Nodes { get; set; }
-
+        public DbSet<CarAnagraphicModel> Cars { get; set; }
         public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }
+        public DbSet<MainMenuModel> MainMenu { get; set; }
+        public DbSet<NodeModel> Nodes { get; set; }
+        public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
+        public DbSet<SafeAuthModel> SafeAuthModels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
