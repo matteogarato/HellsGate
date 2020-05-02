@@ -1,4 +1,6 @@
-﻿using HellsGate.Models.DatabaseModel;
+﻿using HellsGate.Api.Models.Read;
+using HellsGate.Models;
+using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
+    [Authorize]
     [Route("api/NodeController")]
     [ApiController]
     public class NodeController : ControllerBase
@@ -18,8 +21,19 @@ namespace HellsGate.Controllers
             _nodeService = nodeService ?? throw new ArgumentNullException(nameof(nodeService));
         }
 
-        [Route("")]
         [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] Api.Models.Read.AuthenticateModel model)
+        {
+            var authValue = (WellknownAuthorizationLevel)model.AuthValue;
+            var user = await _nodeService.Authenticate(model.NodeName, model.MacAddress, authValue);
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(user);
+        }
+
+        [Route("")]
         [HttpPost]
         public IActionResult CreateAsync([FromBody] NodeCreateModel model)
         {
@@ -36,7 +50,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("")]
-        [AllowAnonymous]
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(Guid Id)
         {
@@ -53,7 +66,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("{Id}")]
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAsync(Guid Id)
         {
@@ -70,7 +82,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("")]
-        [AllowAnonymous]
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] NodeUpdateModel model)
         {

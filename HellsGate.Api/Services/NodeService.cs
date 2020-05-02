@@ -1,23 +1,66 @@
-﻿using HellsGate.Models.Context;
+﻿using HellsGate.Api.Infrastructure;
+using HellsGate.Models;
+using HellsGate.Models.Context;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HellsGate.Services
 {
     public class NodeService : INodeService
     {
+        private readonly AppSettings _appSettings;
         private readonly HellsGateContext _context;
 
-        public NodeService(HellsGateContext context)
+        public NodeService(HellsGateContext context, IOptions<AppSettings> appSettings)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+
+            _appSettings = appSettings.Value ?? throw new ArgumentNullException(nameof(appSettings)); ;
+        }
+
+        public async Task<NodeReadModel> Authenticate(string nodeName, string macAddress, WellknownAuthorizationLevel AuthValue)
+        {
+            if (string.IsNullOrEmpty(nodeName))
+            {
+                return null;
+            }
+            if (string.IsNullOrWhiteSpace(macAddress))
+            {
+                return null;
+            }
+            if (!await _context.Nodes.AnyAsync(n => n.Name == nodeName && n.MacAddress == macAddress && n.AuthValue == AuthValue))
+            {
+                return null;
+            }
+            var node = await _context.Nodes.FirstAsync(n => n.Name == nodeName && n.MacAddress == macAddress && n.AuthValue == AuthValue);
+            var nodeReaded = JToken.FromObject(node).ToObject<NodeReadModel>();
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, node.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            nodeReaded.Token = tokenHandler.WriteToken(token);
+            return nodeReaded;
         }
 
         public Guid Create(NodeCreateModel node)

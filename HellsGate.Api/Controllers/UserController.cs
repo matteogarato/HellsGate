@@ -20,7 +20,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("/ChangeCardNumber")]
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult ChangeCardNumber([FromQuery] Guid userId, [FromQuery] string cardNumber)
         {
@@ -44,7 +43,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("CreateAdmin")]
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateAdmin()
         {
@@ -53,7 +51,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("Card")]
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateCard([FromBody] CardModel card)
         {
@@ -73,7 +70,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("")]
-        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateUser([FromBody]CreateUserModel createModel)
         {
@@ -104,7 +100,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("Card")]
-        [AllowAnonymous]
         [HttpPut]
         public IActionResult UpdateCard([FromQuery]string cardNumber, [FromQuery] DateTime newExpirationDate)
         {

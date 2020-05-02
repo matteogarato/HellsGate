@@ -22,7 +22,6 @@ namespace HellsGate.Controllers
         }
 
         [Route("Card/{CardId}")]
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> VerifyCardAsync(string CardId)
         {
