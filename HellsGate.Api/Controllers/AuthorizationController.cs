@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("Authorization")]
     [ApiController]
     public class AuthorizationController : ControllerBase
