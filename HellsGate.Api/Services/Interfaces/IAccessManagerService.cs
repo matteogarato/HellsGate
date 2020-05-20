@@ -8,7 +8,7 @@ namespace HellsGate.Services.Interfaces
 {
     public interface IAccessManagerService
     {
-        public Task<bool> Access(AccessModel newAccess, WellknownAuthorizationLevel AccessType);
+        public Task<bool> Access(AccessModel newAccess);
 
         public Task<Guid> GetUserByInputAsync(string UserInput);
 

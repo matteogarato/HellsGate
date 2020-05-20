@@ -1,9 +1,12 @@
-﻿using HellsGate.Models;
+﻿using HellsGate.Api.Models.Read;
+using HellsGate.Models;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
@@ -21,11 +24,11 @@ namespace HellsGate.Controllers
             _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
         }
 
-        [Route("Card/{CardId}")]
+        [Route("Card/")]
         [HttpGet]
-        public async Task<IActionResult> VerifyCardAsync(string CardId)
+        public async Task<IActionResult> VerifyCardAsync([FromBody]AccessReadModel CardReaded)
         {
-            if (string.IsNullOrWhiteSpace(CardId))
+            if (CardReaded == null)
             {
                 return BadRequest();
             }
@@ -33,10 +36,12 @@ namespace HellsGate.Controllers
             {
                 AccessTime = DateTime.UtcNow,
                 GrantedAccess = false,
-                CardNumber = CardId
+                CardNumber = CardReaded.CardNumber,
+                MacAddress = CardReaded.MacAddress,
+                NodeName = CardReaded.NodeName
             };
 
-            var granted = await _accessManager.Access(newAccess, AccessType);
+            var granted = await _accessManager.Access(newAccess);
             if (!granted)
             {
                 return BadRequest();
@@ -59,7 +64,7 @@ namespace HellsGate.Controllers
                 Plate = PlateNumber
             };
 
-            var granted = await _accessManager.Access(newAccess, AccessType);
+            var granted = await _accessManager.Access(newAccess);
             if (!granted)
             {
                 return BadRequest();

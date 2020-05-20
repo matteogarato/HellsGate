@@ -32,7 +32,7 @@ namespace HellsGate.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<bool> Access(AccessModel newAccess, WellknownAuthorizationLevel AccessType)
+        public async Task<bool> Access(AccessModel newAccess)
         {
             newAccess.GrantedAccess = false;
             if (newAccess.PeopleEntered.Equals(Guid.Empty) || !string.IsNullOrEmpty(newAccess.Plate) || !string.IsNullOrEmpty(newAccess.CardNumber))
@@ -40,6 +40,7 @@ namespace HellsGate.Services
                 try
                 {
                     PeopleAnagraphicModel owner = new PeopleAnagraphicModel();
+                    WellknownAuthorizationLevel accessLevelNeed = WellknownAuthorizationLevel.Root;
                     if (newAccess.PeopleEntered.Equals(Guid.Empty) && !string.IsNullOrEmpty(newAccess.Plate))
                     {
                         if (await _context.Cars.AnyAsync(c => c.LicencePlate == newAccess.Plate))
@@ -51,8 +52,14 @@ namespace HellsGate.Services
                     else if (await _context.Peoples.AnyAsync(c => c.CardNumber.CardNumber == newAccess.CardNumber).ConfigureAwait(false))
                     {
                         owner = await _context.Peoples.FirstAsync(a => a.CardNumber.CardNumber == newAccess.CardNumber).ConfigureAwait(false);
+                        if (!await _context.Nodes.AnyAsync(n => n.Name == newAccess.NodeName && n.MacAddress == newAccess.MacAddress))
+                        {
+                            return false;
+                        }
+                        var node = await _context.Nodes.FirstAsync(n => n.Name == newAccess.NodeName && n.MacAddress == newAccess.MacAddress);
+                        accessLevelNeed = node.AuthValue;
                     }
-                    if (await _autorizationManagerService.IsAutorized(owner.Id, AccessType).ConfigureAwait(false))
+                    if (await _autorizationManagerService.IsAutorized(owner.Id, accessLevelNeed).ConfigureAwait(false))
                     {
                         newAccess.PeopleEntered = owner.Id;
                         newAccess.GrantedAccess = true;
