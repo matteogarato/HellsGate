@@ -1,0 +1,8 @@
+
+#DockerImageCreate
+docker build -t hellsgate-image -f C:\Users\garat\OneDrive\Documenti\Repository\HellsGate\HellsGate.MVC\Dockerfile .
+docker create --name hellsgate hellsgate-image
+docker save hellsgate-image > hellsgate.tar
+
+#Docker load
+docker load -i hellsgate.tar
