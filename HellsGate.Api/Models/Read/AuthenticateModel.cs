@@ -8,9 +8,6 @@ namespace HellsGate.Api.Models.Read
     public class AuthenticateModel
     {
         [Required]
-        public int AuthValue { get; set; }
-
-        [Required]
         public string MacAddress { get; set; }
 
         [Required]

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/NodeController")]
     [ApiController]
     public class NodeController : ControllerBase
@@ -25,8 +25,7 @@ namespace HellsGate.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] Api.Models.Read.AuthenticateModel model)
         {
-            var authValue = (WellknownAuthorizationLevel)model.AuthValue;
-            var user = await _nodeService.Authenticate(model.NodeName, model.MacAddress, authValue);
+            var user = await _nodeService.Authenticate(model.NodeName, model.MacAddress);
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 

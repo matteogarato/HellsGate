@@ -30,7 +30,7 @@ namespace HellsGate.Services
             _appSettings = appSettings.Value ?? throw new ArgumentNullException(nameof(appSettings)); ;
         }
 
-        public async Task<NodeReadModel> Authenticate(string nodeName, string macAddress, WellknownAuthorizationLevel AuthValue)
+        public async Task<NodeReadModel> Authenticate(string nodeName, string macAddress)
         {
             if (string.IsNullOrEmpty(nodeName))
             {
@@ -40,11 +40,11 @@ namespace HellsGate.Services
             {
                 return null;
             }
-            if (!await _context.Nodes.AnyAsync(n => n.Name == nodeName && n.MacAddress == macAddress && n.AuthValue == AuthValue))
+            if (!await _context.Nodes.AnyAsync(n => n.Name == nodeName && n.MacAddress == macAddress))
             {
                 return null;
             }
-            var node = await _context.Nodes.FirstAsync(n => n.Name == nodeName && n.MacAddress == macAddress && n.AuthValue == AuthValue);
+            var node = await _context.Nodes.FirstAsync(n => n.Name == nodeName && n.MacAddress == macAddress);
             var nodeReaded = JToken.FromObject(node).ToObject<NodeReadModel>();
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();

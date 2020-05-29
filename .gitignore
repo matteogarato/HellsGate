@@ -468,3 +468,5 @@ ASALocalRun/
 /HellsGate/wwwroot/
 /HellsGate.MVC/appsettings.json
 /HellsGate.Node/NodeDebug/
+/HellsGate.MVC/hellsgate.tar
+/HellsGate.Node/HellsGateNode.Config

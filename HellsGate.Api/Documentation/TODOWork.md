@@ -10,6 +10,6 @@
 
 5. integration test
 
-8. Node Class for node management
+6. Add MD5 to verify no modification are done to the User/authentication
 
-9. Add MD5 to verify no modification are done to the User/authentication
+7. https certificate with docker

@@ -8,7 +8,7 @@ namespace HellsGate.Services.Interfaces
 {
     public interface INodeService
     {
-        public Task<NodeReadModel> Authenticate(string nodeName, string MacAddress, WellknownAuthorizationLevel AuthValue);
+        public Task<NodeReadModel> Authenticate(string nodeName, string MacAddress);
 
         public Guid Create(NodeCreateModel node);
 

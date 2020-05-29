@@ -12,6 +12,7 @@
     <Name>HellsGate.Node</Name>
     <RootNamespace>HellsGate.Node</RootNamespace>
     <InterpreterId>MSBuild|NodeDebug|$(MSBuildProjectFullPath)</InterpreterId>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
