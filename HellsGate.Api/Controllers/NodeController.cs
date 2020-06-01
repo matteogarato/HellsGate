@@ -1,6 +1,4 @@
-﻿using HellsGate.Api.Models.Read;
-using HellsGate.Models;
-using HellsGate.Models.DatabaseModel;
+﻿using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

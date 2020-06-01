@@ -1,5 +1,4 @@
 ﻿using HellsGate.Api.Infrastructure;
-using HellsGate.Models;
 using HellsGate.Models.Context;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;

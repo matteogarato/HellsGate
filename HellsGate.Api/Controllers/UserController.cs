@@ -2,7 +2,6 @@
 using HellsGate.Models;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -19,7 +18,7 @@ namespace HellsGate.Controllers
             _autorizationManagerService = autorizationManagerService ?? throw new ArgumentNullException(nameof(autorizationManagerService));
         }
 
-        [Route("/ChangeCardNumber")]
+        [Route("ChangeCardNumber")]
         [HttpPost]
         public IActionResult ChangeCardNumber([FromQuery] Guid userId, [FromQuery] string cardNumber)
         {

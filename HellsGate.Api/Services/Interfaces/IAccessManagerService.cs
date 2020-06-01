@@ -1,5 +1,4 @@
-﻿using HellsGate.Models;
-using HellsGate.Models.DatabaseModel;
+﻿using HellsGate.Models.DatabaseModel;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HellsGate.Api.Models.Read
+﻿namespace HellsGate.Api.Models.Read
 {
     public class AccessReadModel
     {

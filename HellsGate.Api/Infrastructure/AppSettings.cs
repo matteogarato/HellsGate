@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HellsGate.Api.Infrastructure
+﻿namespace HellsGate.Api.Infrastructure
 {
     public class AppSettings
     {

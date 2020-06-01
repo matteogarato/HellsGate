@@ -1,5 +1,4 @@
-﻿using HellsGate.Models;
-using HellsGate.Models.DatabaseModel;
+﻿using HellsGate.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

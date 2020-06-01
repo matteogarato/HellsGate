@@ -1,4 +1,5 @@
 import configparser
+import json
 import requests
 import RPi.GPIO as GPIO
 from uuid import getnode as get_mac
@@ -13,7 +14,7 @@ def main():
      configParser.read(configFilePath)
      url = configParser.get('API', 'Url')
      secreTokenUrl = configParser.get('API', 'Token')
-     accessUrl =configParser.get('API', 'Access')
+     accessUrl = configParser.get('API', 'Access')
      RELAIS_1_GPIO = int(configParser.get('API', 'PinOut'))
      openTime = int(configParser.get('API', 'OpenTime'))
      nodeName = configParser.get('API', 'nodeName')
@@ -21,10 +22,15 @@ def main():
      GPIO.setup(RELAIS_1_GPIO, GPIO.OUT) # GPIO Assign mode
      GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
      mac = get_mac()
-     authenticateData={'macAddress': mac,'nodeName': nodeName}
+     authenticateData = {'macAddress': mac,'nodeName': nodeName}
+     headers = {'content-type': 'application/json'}
      data_json = json.dumps(authenticateData)
-     secretToken = requests.post(url+secreTokenUrl, json={'macAddress': mac,'nodeName': nodeName}, verify=False)
-     auth = {'Authorization': 'token {}'.format(secreToken)}
+     response = requests.post(url + secreTokenUrl, data=data_json, headers=headers, verify=False)
+     if(not response.ok):
+         print("unauthorized")
+         quit
+     decoded_response = json.loads(response.content.decode("utf-8"))
+     auth = {'Authorization': 'token {}'.format(decoded_response['token'])}
      print('Configured!')
      with open('/dev/tty0', 'r') as tty:
          while True:
@@ -34,13 +40,13 @@ def main():
                  nodeData = '"cardNumber": "{}","macAddress": "{}","nodeName": "{}"'.format(RFID_input,mac,nodeName)
                  nodeData = '{ ' + nodeData + ' }'
                  print(nodeData)
-                 #if (requests.get(url, auth=auth, data=json.dumps(nodeData))):
-                 #     print('Open')
-                 #     GPIO.output(RELAIS_1_GPIO, GPIO.HIGH) # on
-                 #     time.sleep(openTime)
-                 #     GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
-                 #else:
-                 #    GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
+                 if (requests.get(url, auth=auth, data=json.dumps(nodeData))):
+                      print('Open')
+                      GPIO.output(RELAIS_1_GPIO, GPIO.HIGH) # on
+                      time.sleep(openTime)
+                      GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
+                 else:
+                     GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
     except Exception as e:
                 print(e)
                 main()
