@@ -36,16 +36,15 @@ def main():
          while True:
              RFID_input = tty.readline().rstrip()
              if(RFID_input and len(RFID_input) == 10):
-                 #todo: authentication call
-                 nodeData = '"cardNumber": "{}","macAddress": "{}","nodeName": "{}"'.format(RFID_input,mac,nodeName)
-                 nodeData = '{ ' + nodeData + ' }'
-                 print(nodeData)
-                 if (requests.get(url, auth=auth, data=json.dumps(nodeData))):
+                 nodeData = {'cardNumber': RFID_input,'macAddress': mac,'nodeName': nodeName}
+                 authResponse = requests.get(url + accessUrl, auth=auth, data=json.dumps(nodeData),headers=headers, verify=False)
+                 if (response.ok):
                       print('Open')
                       GPIO.output(RELAIS_1_GPIO, GPIO.HIGH) # on
                       time.sleep(openTime)
                       GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
                  else:
+                     print("unauthorized")
                      GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
     except Exception as e:
                 print(e)

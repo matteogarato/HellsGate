@@ -13,3 +13,7 @@
 6. Add MD5 to verify no modification are done to the User/authentication
 
 7. https certificate with docker
+
+8. python remote logging
+
+9. FrontEnd application
