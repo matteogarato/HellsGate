@@ -70,7 +70,7 @@ namespace HellsGate.Controllers
 
         [Route("")]
         [HttpPost]
-        public IActionResult CreateUser([FromBody]CreateUserModel createModel)
+        public IActionResult CreateUser([FromBody] CreateUserModel createModel)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace HellsGate.Controllers
 
         [Route("Card")]
         [HttpPut]
-        public IActionResult UpdateCard([FromQuery]string cardNumber, [FromQuery] DateTime newExpirationDate)
+        public IActionResult UpdateCard([FromQuery] string cardNumber, [FromQuery] DateTime newExpirationDate)
         {
             try
             {
