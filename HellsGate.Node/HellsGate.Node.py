@@ -30,7 +30,7 @@ def main():
          print("unauthorized")
          quit
      decoded_response = json.loads(response.content.decode("utf-8"))
-     auth = {'Authorization': 'token {}'.format(decoded_response['token'])}
+     auth = {'Authorization': 'Token ' + decoded_response['token']}
      print('Configured!')
      with open('/dev/tty0', 'r') as tty:
          while True:

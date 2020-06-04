@@ -46,18 +46,18 @@ namespace HellsGate.Services
             var node = await _context.Nodes.FirstAsync(n => n.Name == nodeName && n.MacAddress == macAddress);
             var nodeReaded = JToken.FromObject(node).ToObject<NodeReadModel>();
             // authentication successful so generate jwt token
+
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, node.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken
+            (
+                _appSettings.Issuer,
+                _appSettings.Issuer,
+                null,
+                expires: DateTime.UtcNow.AddDays(7),
+                signingCredentials: credentials
+            );
             nodeReaded.Token = tokenHandler.WriteToken(token);
             return nodeReaded;
         }
