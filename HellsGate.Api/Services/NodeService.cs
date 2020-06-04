@@ -50,11 +50,18 @@ namespace HellsGate.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, node.Name),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
             var token = new JwtSecurityToken
             (
                 _appSettings.Issuer,
                 _appSettings.Issuer,
-                null,
+                claims,
                 expires: DateTime.UtcNow.AddDays(7),
                 signingCredentials: credentials
             );

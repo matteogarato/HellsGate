@@ -5,6 +5,7 @@ using HellsGate.Services.Interfaces;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,7 @@ namespace HellsGate.Infrastructure
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(x =>
@@ -46,7 +48,12 @@ namespace HellsGate.Infrastructure
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Secret))
                 };
             });
-
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
             services.AddDbContext<HellsGateContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("HellsGateContext")));
             //services.AddDefaultIdentity<PeopleAnagraphicModel>(options => options.SignIn.RequireConfirmedAccount = true)

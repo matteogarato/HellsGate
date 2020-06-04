@@ -4,6 +4,17 @@ namespace HellsGate.Api.Migrations
 {
     public partial class DEV002 : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "MacAddress",
+                table: "Access");
+
+            migrationBuilder.DropColumn(
+                name: "NodeName",
+                table: "Access");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -15,17 +26,6 @@ namespace HellsGate.Api.Migrations
                 name: "NodeName",
                 table: "Access",
                 nullable: true);
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "MacAddress",
-                table: "Access");
-
-            migrationBuilder.DropColumn(
-                name: "NodeName",
-                table: "Access");
         }
     }
 }
