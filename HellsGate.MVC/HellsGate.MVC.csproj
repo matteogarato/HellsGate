@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="docker build -t hellsgate-image -f $(ProjectDir)\Dockerfile .&#xD;&#xA;docker create --name hellsgate hellsgate-image&#xD;&#xA;docker save hellsgate-image &gt; hellsgate.tar" />
+    <Exec Command="docker stop hellsgate-image&#xD;&#xA;docker build -t hellsgate-image -f $(ProjectDir)\Dockerfile .&#xD;&#xA;docker create --name hellsgate hellsgate-image&#xD;&#xA;docker save hellsgate-image &gt; hellsgate.tar" />
   </Target>
 
 </Project>
