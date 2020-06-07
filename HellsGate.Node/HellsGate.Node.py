@@ -21,13 +21,13 @@ def main():
      GPIO.setmode(GPIO.BCM) # GPIO Numbers instead of board numbers
      GPIO.setup(RELAIS_1_GPIO, GPIO.OUT) # GPIO Assign mode
      GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
-     mac = get_mac()
+     mac = ':'.join(("%012X" % get_mac())[i:i + 2] for i in range(0, 12, 2))
      authenticateData = {'macAddress': mac,'nodeName': nodeName}
      headers = {'content-type': 'application/json'}
      data_json = json.dumps(authenticateData)
      response = requests.post(url + secreTokenUrl, data=data_json, headers=headers, verify=False)
      if(not response.ok):
-         print("unauthorized"+response)
+         print("unauthorized" + response.content.decode("utf-8"))
          return
      decoded_response = json.loads(response.content.decode("utf-8"))
      auth = { 'Content-Type': 'text/plain','Authorization': 'Bearer ' + decoded_response['token']}
