@@ -27,8 +27,8 @@ def main():
      data_json = json.dumps(authenticateData)
      response = requests.post(url + secreTokenUrl, data=data_json, headers=headers, verify=False)
      if(not response.ok):
-         print("unauthorized")
-         quit
+         print("unauthorized"+response)
+         return
      decoded_response = json.loads(response.content.decode("utf-8"))
      auth = { 'Content-Type': 'text/plain','Authorization': 'Bearer ' + decoded_response['token']}
      print('Configured!')
