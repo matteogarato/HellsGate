@@ -17,7 +17,7 @@ def main():
      accessUrl = configParser.get('API', 'Access')
      RELAIS_1_GPIO = int(configParser.get('API', 'PinOut'))
      openTime = int(configParser.get('API', 'OpenTime'))
-     nodeName = configParser.get('API', 'nodeName')
+     nodeName = configParser.get('API', 'NodeName')
      GPIO.setmode(GPIO.BCM) # GPIO Numbers instead of board numbers
      GPIO.setup(RELAIS_1_GPIO, GPIO.OUT) # GPIO Assign mode
      GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
