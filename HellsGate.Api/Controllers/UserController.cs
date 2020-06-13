@@ -4,6 +4,7 @@ using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
@@ -20,7 +21,7 @@ namespace HellsGate.Controllers
 
         [Route("ChangeCardNumber")]
         [HttpPost]
-        public IActionResult ChangeCardNumber([FromQuery] Guid userId, [FromQuery] string cardNumber)
+        public async Task<IActionResult> ChangeCardNumber([FromQuery] Guid userId, [FromQuery] string cardNumber)
         {
             try
             {
@@ -32,8 +33,8 @@ namespace HellsGate.Controllers
                 {
                     return BadRequest();
                 }
-                _autorizationManagerService.ChangeCardNumber(userId, cardNumber);
-                return Ok();
+                var created = await _autorizationManagerService.ChangeCardNumber(userId, cardNumber);
+                return Ok(created);
             }
             catch (Exception ex)
             {
@@ -51,7 +52,7 @@ namespace HellsGate.Controllers
 
         [Route("Card")]
         [HttpPost]
-        public IActionResult CreateCard([FromBody] CardModel card)
+        public async Task<IActionResult> CreateCard([FromBody] CardModel card)
         {
             try
             {
@@ -59,8 +60,8 @@ namespace HellsGate.Controllers
                 {
                     return BadRequest();
                 }
-                _autorizationManagerService.CreateCard(card);
-                return Ok();
+                var created = await _autorizationManagerService.CreateCard(card);
+                return Ok(created);
             }
             catch (Exception ex)
             {
@@ -70,7 +71,7 @@ namespace HellsGate.Controllers
 
         [Route("")]
         [HttpPost]
-        public IActionResult CreateUser([FromBody] CreateUserModel createModel)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserModel createModel)
         {
             try
             {
@@ -89,8 +90,8 @@ namespace HellsGate.Controllers
                     AuthName = createModel.AuthName,
                     AuthValue = (WellknownAuthorizationLevel)createModel.AuthValue
                 };
-                _autorizationManagerService.CreateUser(usr, auth);
-                return Ok();
+                var created = await _autorizationManagerService.CreateUser(usr, auth);
+                return Ok(created);
             }
             catch (Exception ex)
             {
@@ -100,7 +101,7 @@ namespace HellsGate.Controllers
 
         [Route("Card")]
         [HttpPut]
-        public IActionResult UpdateCard([FromQuery] string cardNumber, [FromQuery] DateTime newExpirationDate)
+        public async Task<IActionResult> UpdateCard([FromQuery] string cardNumber, [FromQuery] DateTime newExpirationDate)
         {
             try
             {
@@ -108,8 +109,8 @@ namespace HellsGate.Controllers
                 {
                     return BadRequest();
                 }
-                _autorizationManagerService.UpdateCardExpirationDate(cardNumber, newExpirationDate);
-                return Ok();
+                var created = await _autorizationManagerService.UpdateCardExpirationDate(cardNumber, newExpirationDate);
+                return Ok(created);
             }
             catch (Exception ex)
             {

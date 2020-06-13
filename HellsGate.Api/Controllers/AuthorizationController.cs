@@ -22,7 +22,7 @@ namespace HellsGate.Controllers
             _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
         }
 
-        [Route("Card/")]
+        [Route("Card")]
         [HttpGet]
         public async Task<IActionResult> VerifyCardAsync([FromBody] AccessReadModel CardReaded)
         {
@@ -44,7 +44,7 @@ namespace HellsGate.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(granted);
         }
 
         [Route("Plate/{PlateNumber}")]
@@ -67,7 +67,7 @@ namespace HellsGate.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok(granted);
         }
     }
 }
