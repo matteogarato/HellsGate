@@ -22,5 +22,5 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "HellsGate.MVC.dll"]
 
-RUN chmod +x ./entrypoint.sh
+#RUN chmod +x ./entrypoint.sh
 CMD /bin/bash ./entrypoint.sh
