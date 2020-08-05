@@ -1,5 +1,5 @@
 #!/bin/sh
-sudo git pull
+#sudo git pull
 #DockerImageCreate
 sudo docker rm $(sudo docker stop $(sudo docker ps -a -q --filter ancestor=hellsgate-image --format="{{.ID}}"))
 sudo docker build -t hellsgate-image -f Dockerfile .
