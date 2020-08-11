@@ -1,13 +1,17 @@
 version: "3"
 services:
     web:
-        build: .
+        restart: always
+        build:
+            context: .
+            dockerfile: Dockerfile
         ports:
             - "8082:8082"
         depends_on:
             - db
     db:
         image: "mcr.microsoft.com/mssql/server"
+        container_name: db-server
         environment:
-            SA_PASSWORD: ""
+            SA_PASSWORD: "97531zzZ#"
             ACCEPT_EULA: "Y"

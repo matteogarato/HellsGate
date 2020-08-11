@@ -1,6 +1,7 @@
 [API]
-Url=
-Token=
-PinOut=
-OpenTime=
-nodeName=
+Url=http://192.168.3.56/
+Token=/api/NodeController/authenticate
+Access=/api/Authorization/Card
+PinOut=3
+OpenTime=2
+NodeName=PortaGarage

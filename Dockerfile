@@ -9,7 +9,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["HellsGate.MVC/HellsGate.MVC.csproj", "HellsGate.MVC/"]
 COPY ["HellsGate.Api/HellsGate.Api.csproj", "HellsGate.Api/"]
-COPY ["HellsGate.MVC/appsettings.json", "/appsettings.json"]
 RUN dotnet restore "HellsGate.MVC/HellsGate.MVC.csproj"
 COPY . .
 WORKDIR "/src/HellsGate.MVC"
@@ -22,6 +21,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "HellsGate.MVC.dll"]
-
-#RUN chmod +x ./entrypoint.sh
-CMD /bin/bash ./entrypoint.sh
