@@ -6,12 +6,17 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "8082:8082"
+            - "8082:80"
         depends_on:
             - db
     db:
+        ports:
+            - "1433:1433"
         image: "mcr.microsoft.com/mssql/server"
         container_name: db-server
         environment:
             SA_PASSWORD: "97531zzZ#"
             ACCEPT_EULA: "Y"
+networks:
+  Hellsgate-net:
+    driver: bridge
