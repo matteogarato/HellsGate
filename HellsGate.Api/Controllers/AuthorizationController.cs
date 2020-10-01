@@ -15,7 +15,6 @@ namespace HellsGate.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAccessManagerService _accessManager;
-        private readonly WellknownAuthorizationLevel AccessType = WellknownAuthorizationLevel.User;//TODO: add configuration reading
 
         public AuthorizationController(IAccessManagerService accessManager)
         {
