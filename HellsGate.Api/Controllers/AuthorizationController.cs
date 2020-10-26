@@ -46,9 +46,9 @@ namespace HellsGate.Controllers
             return Ok(granted);
         }
 
-        [Route("Plate/{PlateNumber}")]
+        [Route("Plate")]
         [HttpGet]
-        public async Task<IActionResult> VerifyPlateAsync(string PlateNumber)
+        public async Task<IActionResult> VerifyPlateAsync([FromBody] string PlateNumber)
         {
             if (string.IsNullOrWhiteSpace(PlateNumber))
             {
