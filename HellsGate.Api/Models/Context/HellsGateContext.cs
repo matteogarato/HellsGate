@@ -22,7 +22,7 @@ namespace HellsGate.Models.Context
         public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }
         public DbSet<MainMenuModel> MainMenu { get; set; }
         public DbSet<NodeModel> Nodes { get; set; }
-        public DbSet<PeopleAnagraphicModel> Peoples { get; set; }
+        public DbSet<PersonModel> Peoples { get; set; }
         public DbSet<SafeAuthModel> SafeAuthModels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,7 +36,7 @@ namespace HellsGate.Models.Context
             //        cb.Property(x => x.Id).HasColumnName("Id");
             //    });
             //});
-            builder.Entity<PeopleAnagraphicModel>(entity =>
+            builder.Entity<PersonModel>(entity =>
             {
                 entity.OwnsOne(a => a.SafeAuthModel, sa =>
                    {

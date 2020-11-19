@@ -105,7 +105,7 @@ namespace HellsGate.Services
                     ExpirationDate = DateTime.UtcNow.AddYears(1),
                     CreatedAt = DateTime.UtcNow
                 };
-                var usr = new PeopleAnagraphicModel()
+                var usr = new PersonModel()
                 {
                     UserName = "Admin",
                     Email = "Admin@admin.com",
@@ -165,7 +165,7 @@ namespace HellsGate.Services
         /// <param name="p_user"></param>
         /// <param name="p_autorizationLevel"></param>
         /// <returns></returns>
-        public async Task<Guid> CreateUser(PeopleAnagraphicModel p_user, AutorizationLevelModel p_autorizationLevel)
+        public async Task<Guid> CreateUser(PersonModel p_user, AutorizationLevelModel p_autorizationLevel)
         {
             try
             {
@@ -213,7 +213,7 @@ namespace HellsGate.Services
             {
                 if (await _context.Peoples.AnyAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false))
                 {
-                    PeopleAnagraphicModel usr = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
+                    PersonModel usr = await _context.Peoples.FirstOrDefaultAsync(p => p.Id == p_PeopleModelId).ConfigureAwait(false);
                     if (usr.AutorizationLevel.AuthValue >= p_AuthNeeded
                         && await AuthNotModified(usr.Id).ConfigureAwait(false)
                         && (usr.AutorizationLevel.ExpirationDate.Date >= DateTime.Today.Date || usr.AutorizationLevel.AuthValue == WellknownAuthorizationLevel.Root))

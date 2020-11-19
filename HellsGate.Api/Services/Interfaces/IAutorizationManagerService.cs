@@ -15,7 +15,7 @@ namespace HellsGate.Services.Interfaces
 
         public Task<bool> CreateCard(CardModel p_model);
 
-        public Task<Guid> CreateUser(PeopleAnagraphicModel p_user, AutorizationLevelModel p_autorizationLevel);
+        public Task<Guid> CreateUser(PersonModel p_user, AutorizationLevelModel p_autorizationLevel);
 
         public Task<bool> IsAutorized(Guid p_PeopleModelId, WellknownAuthorizationLevel p_AuthNeeded);
 

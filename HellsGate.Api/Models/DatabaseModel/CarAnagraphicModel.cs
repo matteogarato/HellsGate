@@ -10,6 +10,6 @@ namespace HellsGate.Models.DatabaseModel
         public string LicencePlate { get; set; }
 
         public string Model { get; set; }
-        public virtual PeopleAnagraphicModel Owner { get; set; }
+        public virtual PersonModel Owner { get; set; }
     }
 }

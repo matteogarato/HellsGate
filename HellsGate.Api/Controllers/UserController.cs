@@ -79,7 +79,7 @@ namespace HellsGate.Controllers
                 {
                     return BadRequest();
                 }
-                var usr = new PeopleAnagraphicModel()
+                var usr = new PersonModel()
                 {
                     Email = createModel.Email,
                     Name = createModel.Name,

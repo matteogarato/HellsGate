@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Services
 {
-    public class LoginManagerService<TUser> : SignInManager<TUser> where TUser : PeopleAnagraphicModel
+    public class LoginManagerService<TUser> : SignInManager<TUser> where TUser : PersonModel
     {
         private readonly IAccessManagerService _accessManagerService;
 

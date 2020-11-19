@@ -39,7 +39,7 @@ namespace HellsGate.Services
             {
                 try
                 {
-                    PeopleAnagraphicModel owner = new PeopleAnagraphicModel();
+                    PersonModel owner = new PersonModel();
                     WellknownAuthorizationLevel accessLevelNeed = WellknownAuthorizationLevel.Root;
                     if (newAccess.PeopleEntered.Equals(Guid.Empty) && !string.IsNullOrEmpty(newAccess.Plate))
                     {
@@ -81,7 +81,7 @@ namespace HellsGate.Services
         {
             try
             {
-                var user = new PeopleAnagraphicModel();
+                var user = new PersonModel();
                 if (string.IsNullOrEmpty(UserInput) || string.IsNullOrEmpty(UserInput.Trim()))
                 { return Guid.Empty; }
                 string toFind = UserInput.Trim();
@@ -111,7 +111,7 @@ namespace HellsGate.Services
                 if (userId.Equals(Guid.Empty)) { return SignInResult.Failed; }
                 if (await _context.Peoples.AnyAsync(p => p.Id == userId).ConfigureAwait(false))
                 {
-                    PeopleAnagraphicModel userSelected = await _context.Peoples.Include(Auth => Auth.AutorizationLevel).Include(Card => Card.CardNumber).FirstOrDefaultAsync(p => p.Id == userId).ConfigureAwait(false);
+                    PersonModel userSelected = await _context.Peoples.Include(Auth => Auth.AutorizationLevel).Include(Card => Card.CardNumber).FirstOrDefaultAsync(p => p.Id == userId).ConfigureAwait(false);
                     var encrypted = await _securLib.EncriptLine(password);
                     if (await _securLib.CompareHash(userSelected.Password, encrypted))
                     {

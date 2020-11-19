@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HellsGate.Models.DatabaseModel
 {
-    public class PeopleAnagraphicModel : IdentityUser<Guid>
+    public class PersonModel : IdentityUser<Guid>
     {
         public virtual AutorizationLevelModel AutorizationLevel { get; set; }
 

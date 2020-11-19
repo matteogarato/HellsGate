@@ -9,6 +9,6 @@ namespace HellsGate.Services.Interfaces
 
         public Task<string> EncriptLine(string p_textToEncrypt);
 
-        public Task<string> EncryptEntityRelation(PeopleAnagraphicModel p_UserModel, AutorizationLevelModel p_AuthModel);
+        public Task<string> EncryptEntityRelation(PersonModel p_UserModel, AutorizationLevelModel p_AuthModel);
     }
 }

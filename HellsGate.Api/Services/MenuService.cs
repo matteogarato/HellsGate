@@ -60,7 +60,7 @@ namespace HellsGate.Services
                     StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "p_UserName is null or empty", MethodBase.GetCurrentMethod());
                     return null;
                 }
-                var user = new PeopleAnagraphicModel();
+                var user = new PersonModel();
                 user = _context.Peoples.FirstOrDefault(p => p.UserName == p_UserName);
 
                 if (user != null && user.AutorizationLevel != null)

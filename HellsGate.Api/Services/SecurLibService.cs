@@ -50,7 +50,7 @@ namespace HellsGate.Services
             return Task.FromResult($"{Convert.ToBase64String(salt)}.{hashed}");
         }
 
-        public Task<string> EncryptEntityRelation(PeopleAnagraphicModel p_UserModel, AutorizationLevelModel p_AuthModel)
+        public Task<string> EncryptEntityRelation(PersonModel p_UserModel, AutorizationLevelModel p_AuthModel)
         {
             var md5Anagraphic = CreateMD5($"{p_UserModel.Name}{p_UserModel.Email}{p_UserModel.CardNumber?.CardNumber}{p_UserModel.AutorizationLevel.AuthValue}{p_UserModel.AutorizationLevel.Id}");
             var md5Autorization = CreateMD5($"{p_AuthModel.AuthValue}{p_AuthModel.AuthName}{p_AuthModel.Id}");
