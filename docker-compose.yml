@@ -11,12 +11,11 @@ services:
             - db
     db:
         ports:
-            - "1433:1433"
-        image: "mcr.microsoft.com/mssql/server"
+            - "5432:5432"
+        image: postgres
         container_name: db-server
         environment:
-            SA_PASSWORD: "97531zzZ#"
-            ACCEPT_EULA: "Y"
+            POSTGRES_PASSWORD: "97531zzZ#"
 networks:
   Hellsgate-net:
     driver: bridge
