@@ -39,7 +39,7 @@ namespace HellsGate.Controllers
                 return BadRequest();
             }
             var node = _nodeService.Create(model);
-            if (node == null)
+            if (node != Guid.Empty)
             {
                 return NotFound();
             }
