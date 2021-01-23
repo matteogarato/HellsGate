@@ -1,5 +1,4 @@
 ﻿using HellsGate.Api.Models.Read;
-using HellsGate.Models;
 using HellsGate.Models.DatabaseModel;
 using HellsGate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +14,7 @@ namespace HellsGate.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAccessManagerService _accessManager;
+        private readonly ILoginManagerService _loginManagerService;
 
         public AuthorizationController(IAccessManagerService accessManager)
         {
@@ -63,6 +63,22 @@ namespace HellsGate.Controllers
 
             var granted = await _accessManager.Access(newAccess);
             if (!granted)
+            {
+                return BadRequest();
+            }
+            return Ok(granted);
+        }
+
+        [Route("UserLogin")]
+        [HttpGet]
+        public async Task<IActionResult> PasswordSignInAsync([FromBody] LoginModel loginModel)
+        {
+            if (loginModel == null)
+            {
+                return BadRequest();
+            }
+            var granted = await _loginManagerService.PasswordSignInAsync(loginModel.Username, loginModel.Password, loginModel.IsPersistent, loginModel.LockoutOnFailure);
+            if (!granted.Succeeded)
             {
                 return BadRequest();
             }
