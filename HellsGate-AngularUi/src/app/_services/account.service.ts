@@ -25,14 +25,14 @@ export class AccountService {
         return this.userSubject.value;
     }
 
-    login(username, password) {
-        return this.http.post<User>(`${environment.apiUrl}/UserLogin`, { username, password })
-            .pipe(map(user => {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
-                this.userSubject.next(user);
-                return user;
-            }));
+    login(username, password,isPersistent,LockoutOnFailure) {
+        var login:Login = new Login()
+        login.Username=username;
+        login.Password=password;
+        login.IsPersistent=isPersistent;
+        login.LockoutOnFailure=LockoutOnFailure;
+        const body=JSON.stringify(login);
+        return this.http.post<User>(`${environment.apiUrl}/UserLogin`, body);
     }
 
     logout() {

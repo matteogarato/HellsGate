@@ -1,6 +1,6 @@
 export class Login {
-  username: string;
-  password: string;
+  Username: string;
+  Password: string;
   IsPersistent: boolean;
   LockoutOnFailure: boolean;
 }
