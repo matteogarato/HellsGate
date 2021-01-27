@@ -2,7 +2,7 @@
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { Alert, AlertType } from '@app/_models';
+import { Alert, AlertType } from '../_models/';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
@@ -31,7 +31,7 @@ export class AlertService {
         this.alert(new Alert({ ...options, type: AlertType.Warning, message }));
     }
 
-    // main alert method    
+    // main alert method
     alert(alert: Alert) {
         alert.id = alert.id || this.defaultId;
         this.subject.next(alert);

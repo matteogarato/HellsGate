@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { AccountService, AlertService } from '@app/_services';
+import { AccountService, AlertService } from '../_services';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
