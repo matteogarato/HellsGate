@@ -55,7 +55,7 @@ namespace HellsGate.Infrastructure
                     .Build();
             });
             services.AddDbContext<HellsGateContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("HellsGateContext")));
+                options.UseNpgsql(Configuration.GetConnectionString("HellsGateContext")));
             //services.AddDefaultIdentity<PeopleAnagraphicModel>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<HellsGateContext>();
             services.AddScoped<IAccessManagerService, AccessManagerService>();
