@@ -2,8 +2,6 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { AccountService, AlertService } from '../_services';
 
