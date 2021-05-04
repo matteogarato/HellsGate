@@ -1,15 +1,18 @@
 ﻿using HellsGate.Api.Infrastructure;
 using HellsGate.Models.Context;
+using HellsGate.Models.DatabaseModel;
 using HellsGate.Services;
 using HellsGate.Services.Interfaces;
 using log4net;
 using log4net.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -56,18 +59,21 @@ namespace HellsGate.Infrastructure
             });
             services.AddDbContext<HellsGateContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("HellsGateContext")));
-            //services.AddDefaultIdentity<PeopleAnagraphicModel>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<HellsGateContext>();
+
+            services.AddIdentity<PersonModel, IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<HellsGateContext>()
+            .AddDefaultTokenProviders();
+
             services.AddScoped<IAccessManagerService, AccessManagerService>();
             services.AddScoped<IAutorizationManagerService, AutorizationManagerService>();
             services.AddScoped<INodeService, NodeService>();
-            //services.AddSingleton<ILoginManagerService, LoginManagerService>();
+            services.AddScoped<ILoginManagerService, LoginManagerService>();
+            services.AddScoped<SignInManager<PersonModel>, LoginManagerService>();
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<ISecurLibService, SecurLibService>();
 
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-            //Locator = new Locator();
         }
     }
 }

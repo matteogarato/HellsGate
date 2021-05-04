@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Services
 {
-    public class LoginManagerService<TUser> : SignInManager<TUser> where TUser : PersonModel
+    public class LoginManagerService : SignInManager<PersonModel>, ILoginManagerService
     {
         private readonly IAccessManagerService _accessManagerService;
 
         public LoginManagerService(
-            UserManager<TUser> userManager,
+            UserManager<PersonModel> userManager,
             IHttpContextAccessor contextAccessor,
-            IUserClaimsPrincipalFactory<TUser> claimsFactory,
+            IUserClaimsPrincipalFactory<PersonModel> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
-            ILogger<SignInManager<TUser>> logger,
+            ILogger<SignInManager<PersonModel>> logger,
             IAuthenticationSchemeProvider schemeProvider,
-            IUserConfirmation<TUser> confirmation,
+            IUserConfirmation<PersonModel> confirmation,
             IAccessManagerService accessManagerService
             )
             : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemeProvider, confirmation)
@@ -30,18 +30,18 @@ namespace HellsGate.Services
             _accessManagerService = accessManagerService ?? throw new ArgumentNullException(nameof(accessManagerService));
         }
 
-        //public async Task<Guid> GetUserByInputAsync(string UserInput)
-        //{
-        //    try
-        //    {
-        //        return await _accessManagerService.GetUserByInputAsync(UserInput);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
-        //        throw new System.Exception();
-        //    }
-        //}
+        public async Task<Guid> GetUserByInputAsync(string UserInput)
+        {
+            try
+            {
+                return await _accessManagerService.GetUserByInputAsync(UserInput);
+            }
+            catch (Exception ex)
+            {
+                StaticEventHandler.Log(System.Diagnostics.TraceLevel.Error, "error during Login", MethodBase.GetCurrentMethod(), ex);
+                throw new System.UnauthorizedAccessException($"error during Login:{ex.Message}, {ex.InnerException}");
+            }
+        }
 
         public override async Task<SignInResult> PasswordSignInAsync(string username, string password, bool isPersistent, bool lockoutOnFailure)
         {
@@ -56,7 +56,7 @@ namespace HellsGate.Services
             }
         }
 
-        public override async Task<SignInResult> PasswordSignInAsync(TUser user, string password, bool isPersistent, bool lockoutOnFailure)
+        public override async Task<SignInResult> PasswordSignInAsync(PersonModel user, string password, bool isPersistent, bool lockoutOnFailure)
         {
             try
             {

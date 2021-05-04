@@ -2,11 +2,18 @@ import configparser
 import json
 import requests
 import RPi.GPIO as GPIO
+from functools import cache
 from uuid import getnode as get_mac
 import time
 
 configParser = configparser.RawConfigParser()
 configFilePath = r'HellsGateNode.Config'
+mac=''
+nodeName=''
+url=''
+accessUrl=''
+auth=''
+RELAIS_1_GPIO=0
 
 def main():
     try:
@@ -32,7 +39,15 @@ def main():
      decoded_response = json.loads(response.content.decode("utf-8"))
      auth = { 'Content-Type': 'text/plain','Authorization': 'Bearer ' + decoded_response['token']}
      print('Configured!')
-     #with open('/dev/tty0', 'r') as tty:
+     while True:
+         cardReading()
+    except Exception as e:
+                print(e)
+                main()
+
+@cache
+def cardReading():
+    #with open('/dev/tty0', 'r') as tty:
       #   while True:
      RFID_input = input()#tty.readline().rstrip()
      if(RFID_input and len(RFID_input) == 10):
@@ -46,9 +61,7 @@ def main():
          else:
              print("unauthorized")
              GPIO.output(RELAIS_1_GPIO, GPIO.LOW) # out
-    except Exception as e:
-                print(e)
-                main()
+
 
 if __name__ == '__main__':
     main()

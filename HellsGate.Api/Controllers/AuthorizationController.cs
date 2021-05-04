@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace HellsGate.Controllers
 {
-    [Authorize]
     [Route("api/Authorization")]
     [ApiController]
     public class AuthorizationController : ControllerBase
@@ -16,11 +15,13 @@ namespace HellsGate.Controllers
         private readonly IAccessManagerService _accessManager;
         private readonly ILoginManagerService _loginManagerService;
 
-        public AuthorizationController(IAccessManagerService accessManager)
+        public AuthorizationController(IAccessManagerService accessManager, ILoginManagerService loginManagerService)
         {
             _accessManager = accessManager ?? throw new ArgumentNullException(nameof(accessManager));
+            _loginManagerService = loginManagerService ?? throw new ArgumentNullException(nameof(loginManagerService));
         }
 
+        [Authorize]
         [Route("Card")]
         [HttpGet]
         public async Task<IActionResult> VerifyCardAsync([FromBody] AccessReadModel CardReaded)
@@ -46,6 +47,7 @@ namespace HellsGate.Controllers
             return Ok(granted);
         }
 
+        [Authorize]
         [Route("Plate")]
         [HttpGet]
         public async Task<IActionResult> VerifyPlateAsync([FromBody] string PlateNumber)
@@ -70,7 +72,7 @@ namespace HellsGate.Controllers
         }
 
         [Route("UserLogin")]
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> PasswordSignInAsync([FromBody] LoginModel loginModel)
         {
             if (loginModel == null)

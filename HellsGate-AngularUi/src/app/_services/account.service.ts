@@ -32,7 +32,9 @@ export class AccountService {
         login.IsPersistent=isPersistent;
         login.LockoutOnFailure=LockoutOnFailure;
         const body=JSON.stringify(login);
-        return this.http.post<User>(`${environment.apiUrl}/UserLogin`, body);
+        console.log(`${environment.apiUrl}/Authorization/UserLogin`)
+        console.log(body)
+        return this.http.post<User>(`${environment.apiUrl}/Authorization/UserLogin`, body);
     }
 
     logout() {

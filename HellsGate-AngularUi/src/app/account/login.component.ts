@@ -5,9 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '../_services';
 
-@Component({
-   selector:'login-comp',
-   templateUrl: './login.component.html' })
+@Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
@@ -43,7 +41,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService.login(this.f.username.value, this.f.password.value,this.f.rememberMe,false )
+        this.accountService.login(this.f.username.value, this.f.password.value,false,true)
             .pipe(first())
             .subscribe({
                 next: () => {
