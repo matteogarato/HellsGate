@@ -1,21 +1,27 @@
 version: "3"
-services:
-    web:
-        restart: always
-        build:
-            context: .
-            dockerfile: Dockerfile
-        ports:
-            - "8082:80"
-        depends_on:
-            - db
-    db:
-        ports:
-            - "5432:5432"
-        image: postgres
-        container_name: db-server
-        environment:
-            POSTGRES_PASSWORD: "97531zzZ#"
 networks:
   Hellsgate-net:
-    driver: bridge
+    driver: nat
+services:
+  web:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8082:80"
+    depends_on:
+      - APIdb
+    networks:
+      - Hellsgate-net
+  APIdb:
+    ports:
+      - "5432:5432"
+    image: postgres
+    restart: always
+    environment:
+      POSGRES_USER: "docker"
+      POSTGRES_PASSWORD: "97531zzZ#"
+      POSGRES_DB: "HellsGateDB"
+    networks:
+      - Hellsgate-net
