@@ -33,7 +33,6 @@ export class AccountService {
         login.LockoutOnFailure=LockoutOnFailure;
         const body=JSON.stringify(login);
         console.log(`${environment.apiUrl}/Authorization/UserLogin`)
-        console.log(body)
         return this.http.post<User>(`${environment.apiUrl}/Authorization/UserLogin`, body);
     }
 
