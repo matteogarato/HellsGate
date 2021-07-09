@@ -4,17 +4,32 @@ networks:
     driver: nat
 services:
   web:
+    build:
+      context: .
+      dockerfile: Dockerfile-Angular
+    ports:
+      - "4200:4200"
+    restart: always
+    # volumes:
+    #   - ./HellsGate-AngularUis/src/app
+    command: > 
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+    depends_on:
+      - api
+    networks:
+      - Hellsgate-net
+  api:
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-Api
     ports:
       - "8082:80"
     depends_on:
-      - APIdb
+      - apidb
     networks:
       - Hellsgate-net
-  APIdb:
+  apidb:
     ports:
       - "5432:5432"
     image: postgres
